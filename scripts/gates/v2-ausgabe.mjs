@@ -142,11 +142,10 @@ const pflicht = [
   // Team und Kontakt
   'Tobias Steffen',
   'Gründer von SmartAmt',
-  'Entwickler aus Leipzig. Baut seit Jahren Websites und Software für Mittelstand und Verwaltung, mehr als 50 Digitalprojekte.',
+  'Gründer der NX7.AGENCY. Kein Problem zu verzwickt: mehr als 50 Digitalprojekte für Mittelstand und Verwaltung.',
   'tobiassteffen.com',
   'Leon Pösken',
-  'Entwickler aus Leipzig. IT aus Überzeugung: baut Websites und Software mit Next.js und TypeScript.',
-  'leonposken.vercel.app',
+  'Kaufmann und NGO-Gründer aus Leipzig.',
   '01556 6579408',
   'leon@smartamt.de',
   '0341 97853441',
@@ -191,7 +190,7 @@ for (const foto of ['tobias-steffen.webp', 'leon-poesken.webp']) if (!html.inclu
 if (html.includes('eremiya-rifat')) fehler.push('Foto von Eremiya Rifat steht im HTML');
 // Tobias’ Link: tobiassteffen.com, neuer Tab, noopener; die alten Rollen stehen nicht mehr auf der Seite
 if (!/<a [^>]*href="https:\/\/www\.tobiassteffen\.com\/"[^>]*target="_blank"[^>]*rel="noopener"|<a [^>]*href="https:\/\/www\.tobiassteffen\.com\/"[^>]*rel="noopener"[^>]*target="_blank"/.test(html)) fehler.push('Link auf tobiassteffen.com (neuer Tab, noopener) fehlt');
-if (!/<a [^>]*href="https:\/\/leonposken\.vercel\.app\/"[^>]*target="_blank"[^>]*rel="noopener"|<a [^>]*href="https:\/\/leonposken\.vercel\.app\/"[^>]*rel="noopener"[^>]*target="_blank"/.test(html)) fehler.push('Link auf leonposken.vercel.app (neuer Tab, noopener) fehlt');
+if (html.includes('leonposken.vercel.app')) fehler.push('Link auf leonposken.vercel.app ist raus (Owner 27.10.2026)');
 if (/Ihr Ansprechpartner|Technik, Angebot, Vertrag|Ruft Sie an, beantwortet/.test(alles)) fehler.push('alte Rolle oder alter Satz („Ihr Ansprechpartner“, „Technik, Angebot, Vertrag“, „Ruft Sie an …“) steht auf der Seite');
 
 // Formular: nur „Vorschau anfragen“ und „Etwas anderes“

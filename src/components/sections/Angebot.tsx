@@ -305,7 +305,7 @@ export default function Angebot() {
                 </div>
 
                 {/* 4. Schlusskarte: Preis auf Anfrage, Hauptknopf */}
-                <div className="karte relative isolate overflow-hidden rounded-[1.5rem] border-line-2 px-6 py-10 sm:px-10 md:px-14 md:py-14">
+                <div className="karte relative isolate overflow-hidden rounded-[1.5rem] border-line-2 px-5 py-10 sm:px-10 md:px-14 md:py-14">
                     <div
                         aria-hidden="true"
                         className="dot-grid pointer-events-none absolute inset-y-0 right-0 -z-10 hidden w-1/2 opacity-70 [mask-image:radial-gradient(75%_95%_at_100%_0%,black,transparent)] sm:block"

@@ -133,10 +133,10 @@ if (!/telefon:\s*'0341 97853441'/.test(site)) fehler.push('site.ts: Tobias’ Nu
 if (!existiert('public/images/team/leon-poesken.webp')) fehler.push('public/images/team/leon-poesken.webp fehlt');
 if (!/rolle: 'Gründer von SmartAmt'/.test(personen) || !/rolle: 'Entwickler'/.test(personen)) fehler.push('personen.ts: Rollen „Gründer von SmartAmt“ und „Entwickler“ fehlen');
 if (/Ansprechpartner'|Technik, Angebot, Vertrag|Ruft Sie an/.test(personen)) fehler.push('personen.ts: alte Rollen oder Sätze („Ihr Ansprechpartner“, „Technik, Angebot, Vertrag“, „Ruft Sie an …“) stehen noch drin');
-if (!/Entwickler aus Leipzig\. IT aus Überzeugung: baut Websites und Software mit Next\.js und TypeScript\./.test(personen)) fehler.push('personen.ts: Leons Satz fehlt');
-if (!/Entwickler aus Leipzig\. Baut seit Jahren Websites und Software für Mittelstand und Verwaltung, mehr als 50 Digitalprojekte\./.test(personen)) fehler.push('personen.ts: Tobias’ Satz fehlt');
+if (!/Kaufmann und NGO-Gründer aus Leipzig\./.test(personen)) fehler.push('personen.ts: Leons Satz (Kaufmann und NGO-Gründer) fehlt');
+if (!/Gründer der NX7\.AGENCY\. Kein Problem zu verzwickt: mehr als 50 Digitalprojekte für Mittelstand und Verwaltung\./.test(personen)) fehler.push('personen.ts: Tobias Satz fehlt');
 if (!/https:\/\/www\.tobiassteffen\.com\//.test(personen)) fehler.push('personen.ts: Link auf tobiassteffen.com fehlt');
-if (!/https:\/\/leonposken\.vercel\.app\//.test(personen)) fehler.push('personen.ts: Link auf leonposken.vercel.app fehlt');
+if (/leonposken\.vercel\.app/.test(personen)) fehler.push('personen.ts: Link auf leonposken.vercel.app ist raus (Owner 27.10.2026)');
 if (!/ANSPRECHPARTNER[^=]*=\s*\[LEON_POESKEN,\s*TOBIAS_STEFFEN\]/.test(personen)) fehler.push('personen.ts: im Kontakt muss Leon der erste Ansprechpartner sein');
 
 // ---- 6. Vorher/Nachher ohne Platzhalter ------------------------------------------------------------------------

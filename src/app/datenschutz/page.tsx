@@ -97,8 +97,7 @@ export default function DatenschutzPage() {
 
             <h2>6. Links zu anderen Websites</h2>
             <p>
-                Wir verlinken auf die Website der NX7.AGENCY, auf die Website von Tobias Steffen (tobiassteffen.com), auf die Website von Leon
-                Pösken (leonposken.vercel.app) und auf den Terminbuchungsdienst Cal.com. Erst wenn Sie einen
+                Wir verlinken auf die Website der NX7.AGENCY, auf die Website von Tobias Steffen (tobiassteffen.com) und auf den Terminbuchungsdienst Cal.com. Erst wenn Sie einen
                 solchen Link anklicken, verlassen Sie unsere Website. Dann gilt die Datenschutzerklärung des jeweiligen
                 Anbieters.
             </p>

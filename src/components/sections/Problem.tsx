@@ -133,7 +133,7 @@ export default function Problem() {
                     // Drei Karten eng nebeneinander: oben das Symbol im Bernstein-Feld (offen) und die Nummer, darunter der Kern in
                     // Tinte (Platz für zwei Zeilen, damit die Restzeilen auf einer Linie stehen) und direkt darunter der Rest gedämpft.
                     // Das Auge liest jede Karte von oben nach unten, nicht quer über die Seite.
-                    <ul data-aussagen role="list" className="mt-10 grid gap-4 md:mt-14 md:grid-cols-3 md:gap-5">
+                    <ul data-aussagen role="list" className="mt-10 grid gap-4 md:mt-14 md:gap-5 lg:grid-cols-3">
                         {PROBLEM_AUSSAGEN.map((aussage, i) => {
                             const Symbol = SYMBOLE[aussage.id];
                             return (
@@ -147,7 +147,7 @@ export default function Problem() {
                                             0{i + 1}
                                         </span>
                                     </div>
-                                    <p className="mt-7 min-h-[2.4em] text-[clamp(1.375rem,1.1rem+0.8vw,1.75rem)] font-semibold leading-[1.2] tracking-[-0.02em] text-ink">
+                                    <p className="mt-7 text-[clamp(1.375rem,1.1rem+0.8vw,1.75rem)] font-semibold leading-[1.2] tracking-[-0.02em] text-ink lg:min-h-[2.4em]">
                                         {aussage.kern}
                                     </p>
                                     <p className="mt-2 text-[1.0625rem] leading-[1.45] text-ink-2">{aussage.rest}</p>
@@ -160,7 +160,7 @@ export default function Problem() {
                 {/* Band: das Fazit unter den Karten, mittig wie der ganze Abschnitt: die drei Wörter in einer Reihe, der Knopf darunter */}
                 <div
                     data-abschluss
-                    className="karte relative isolate mt-8 overflow-hidden rounded-[24px] border-line-2 px-6 py-10 text-center sm:px-10 md:mt-10 md:px-14 lg:py-12"
+                    className="karte relative isolate mt-8 overflow-hidden rounded-[24px] border-line-2 px-5 py-10 text-center sm:px-10 md:mt-10 md:px-14 lg:py-12"
                 >
                     {/* Ruhiger Schmuck statt Farbfläche: eine kurze Linie in der Markenfarbe mittig am oberen Kartenrand */}
                     <span

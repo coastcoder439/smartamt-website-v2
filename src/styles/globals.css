@@ -512,6 +512,14 @@
         transform: translateX(3px);
     }
 
+    /* Handy (unter 480 px): etwas schmaler, damit „Kostenlose Vorschau anfragen →“ auch in einer Karte in einer Zeile steht */
+    @media (max-width: 479px) {
+        .btn {
+            padding: 0 1.125rem;
+            font-size: 0.9375rem;
+        }
+    }
+
     .btn-klein {
         min-height: 2.625rem;
         padding: 0 1.125rem;

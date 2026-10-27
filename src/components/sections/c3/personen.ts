@@ -27,7 +27,7 @@ export type Person = {
 const TOBIAS_STEFFEN: Person = {
     name: 'Tobias Steffen',
     rolle: 'Gründer von SmartAmt',
-    satz: 'Entwickler aus Leipzig. Baut seit Jahren Websites und Software für Mittelstand und Verwaltung, mehr als 50 Digitalprojekte.',
+    satz: 'Gründer der NX7.AGENCY. Kein Problem zu verzwickt: mehr als 50 Digitalprojekte für Mittelstand und Verwaltung.',
     foto: '/images/team/tobias-steffen.webp',
     breite: 1536,
     hoehe: 1527,
@@ -40,7 +40,7 @@ const TOBIAS_STEFFEN: Person = {
 const LEON_POESKEN: Person = {
     name: LEON.name,
     rolle: 'Entwickler',
-    satz: 'Entwickler aus Leipzig. IT aus Überzeugung: baut Websites und Software mit Next.js und TypeScript.',
+    satz: 'Kaufmann und NGO-Gründer aus Leipzig.',
     foto: '/images/team/leon-poesken.webp',
     breite: 1536,
     hoehe: 1527,
@@ -48,7 +48,6 @@ const LEON_POESKEN: Person = {
     telefon: LEON.telefon,
     telefonHref: LEON.telefonHref,
     email: LEON.email,
-    link: { href: 'https://leonposken.vercel.app/', label: 'leonposken.vercel.app' },
 };
 
 // Ausgeblendet in v2 (Schulungsleiter KI-Fortbildung); Foto und Text bleiben im Code.
