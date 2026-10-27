@@ -12,11 +12,16 @@
 export type LogoVariante = { id: string; name: string };
 export type LogoKlasse = { id: string; name: string; hinweis: string; varianten: ReadonlyArray<LogoVariante> };
 
-/** Ohne Wahl gilt die heutige Wortmarke mit Signalpunkt. */
-export const LOGO_STANDARD = 'heute';
+/** Die bisherige Wortmarke mit Signalpunkt (ohne Zeichen); bleibt wählbar. */
+export const LOGO_HEUTE = 'heute';
+
+/**
+ * Ohne Wahl gilt die WLAN-Birne in Schwarz-Rot-Gold (R7-W2). Owner 27.10.2026: „Mal bitte standardmäßig ein anderes Logo
+ * als diesen Punkt. Das sieht super langweilig aus.“; Hauptvariante: „Und als Hauptvariante möchte ich … Einmal L7 W2.“
+ */
+export const LOGO_STANDARD = 'wlan-srg';
 
 export const LOGO_KLASSEN: ReadonlyArray<LogoKlasse> = [
-    { id: 'heute', name: 'Heute', hinweis: 'Signalpunkt und Wortmarke', varianten: [{ id: 'heute', name: 'Wortmarke' }] },
     {
         id: 'wlan',
         name: 'WLAN-Birne',
@@ -58,16 +63,17 @@ export const LOGO_KLASSEN: ReadonlyArray<LogoKlasse> = [
             { id: 'klammer-srg', name: 'Schwarz-Rot-Gold' },
         ],
     },
+    { id: 'heute', name: 'Wortmarke', hinweis: 'Signalpunkt und Wortmarke, ohne Zeichen', varianten: [{ id: LOGO_HEUTE, name: 'Wortmarke' }] },
 ];
 
-/** Alle Varianten mit Zeichen (ohne die heutige Wortmarke). */
+/** Alle Varianten mit Zeichen (ohne die Wortmarke mit Signalpunkt). */
 export const LOGO_ZEICHEN_IDS: ReadonlyArray<string> = LOGO_KLASSEN.flatMap((k) => k.varianten.map((v) => v.id)).filter(
-    (id) => id !== LOGO_STANDARD,
+    (id) => id !== LOGO_HEUTE,
 );
 
 /** Alle gültigen Werte für ?logo=… und data-logo. */
-export const LOGO_IDS: ReadonlyArray<string> = [LOGO_STANDARD, ...LOGO_ZEICHEN_IDS];
+export const LOGO_IDS: ReadonlyArray<string> = [...LOGO_ZEICHEN_IDS, LOGO_HEUTE];
 
 export function klasseVon(variante: string): LogoKlasse {
-    return LOGO_KLASSEN.find((k) => k.varianten.some((v) => v.id === variante)) ?? LOGO_KLASSEN[0];
+    return LOGO_KLASSEN.find((k) => k.varianten.some((v) => v.id === variante)) ?? klasseVon(LOGO_STANDARD);
 }

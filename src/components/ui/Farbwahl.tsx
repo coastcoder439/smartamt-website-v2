@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { usePathname } from 'next/navigation';
 import { Check, Palette } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { klasseVon, LOGO_IDS, LOGO_KLASSEN, LOGO_STANDARD } from '@/lib/logos';
+import { klasseVon, LOGO_HEUTE, LOGO_IDS, LOGO_KLASSEN, LOGO_STANDARD } from '@/lib/logos';
 
 /**
  * Farbwahl: ein Werkzeug für Tobi und für den Vergleich, keine Funktion für Besucher.
@@ -25,7 +25,7 @@ import { klasseVon, LOGO_IDS, LOGO_KLASSEN, LOGO_STANDARD } from '@/lib/logos';
  *
  * Logo-Wahl im selben Feld (Owner 27.10.2026: „Es soll somit hier Logo und dann Varianten“): erst das Logo (Radiogruppe),
  * dann dessen Varianten (zweite Radiogruppe, nur wenn es mehr als eine gibt); ein neues Logo startet mit seiner
- * Hauptvariante. Die Wahl steht ebenso nur in der Adresse (?logo=…; die heutige Wortmarke lässt den Parameter weg) und
+ * Hauptvariante. Die Wahl steht ebenso nur in der Adresse (?logo=…; der Standard aus lib/logos.ts lässt den Parameter weg) und
  * am html-Element (data-logo). Die Liste steht in lib/logos.ts.
  *
  * Ein-/ausgeblendet wird die Farbwahl über EINZELNES.farbwahl in lib/abschnitte.ts (layout.tsx); bei false steht
@@ -67,7 +67,7 @@ function serverFarbe(): FarbId {
     return 'orange';
 }
 
-/** Die Logo-Variante am html-Element (Skript im Kopf oder Klick); sonst die heutige Wortmarke. */
+/** Die Logo-Variante am html-Element (Skript im Kopf oder Klick); sonst der Standard (lib/logos.ts). */
 const LOGO_PARAMETER = 'logo';
 const LOGO_AENDERUNG = 'logowahl:aenderung';
 function liesLogo(): string {
@@ -251,7 +251,7 @@ export default function Farbwahl() {
                                         )}
                                     >
                                         <span className="logo grid h-8 w-8 flex-none place-items-center" aria-hidden="true">
-                                            {k.id === LOGO_STANDARD ? (
+                                            {k.id === LOGO_HEUTE ? (
                                                 <span className="h-2.5 w-2.5 rounded-full bg-brand" />
                                             ) : (
                                                 <svg viewBox="0 0 64 64" className="h-8 w-8" focusable="false">

@@ -244,7 +244,7 @@ export default function Header() {
                     />
                 </div>
 
-                <div className="wrap grid h-[var(--header-h)] grid-cols-[auto_1fr_auto] items-center gap-6 lg:gap-8">
+                <div className="wrap grid h-[var(--header-h)] grid-cols-[auto_1fr_auto] items-center gap-2.5 sm:gap-6 lg:gap-8">
                     <Logo onClick={beiLogo} className="kopf-logo" />
 
                     <nav aria-label="Hauptnavigation" className="hidden justify-self-center lg:block">

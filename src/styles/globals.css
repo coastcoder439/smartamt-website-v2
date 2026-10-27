@@ -394,6 +394,13 @@
         --logo-h: 2.25rem !important;
     }
 
+    /* Handy (unter 640 px): etwas kleiner, damit Logo und „Schließen“ ab 360 px Breite nebeneinander passen */
+    @media (max-width: 639px) {
+        .kopf-logo :is(.logo-mark, .logo-bild) {
+            --logo-h: 1.875rem !important;
+        }
+    }
+
     @media (min-width: 1024px) {
         .kopf-logo :is(.logo-mark, .logo-bild) {
             --logo-h: 2.375rem !important;

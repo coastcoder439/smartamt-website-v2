@@ -18,7 +18,7 @@ import { LOGO_ZEICHEN } from './logo-zeichen';
  * Logo-Wahl (Werkzeug wie die Farbwahl, Owner 27.10.2026: „Ich will jetzt auch, dass man das Logo auswählen kann“):
  * Neben der heutigen Wortmarke stehen alle Varianten aus lib/logos.ts (Zeichen samt Wortmarke mit Dach-A) im HTML, als
  * <use> auf die Symbole aus LogoSprite.tsx; sichtbar ist nur die Fassung, die data-logo am html-Element nennt (Skript im
- * Kopf von layout.tsx, ?logo=…). Ohne Wahl gilt die heutige Wortmarke.
+ * Kopf von layout.tsx, ?logo=…). Ohne Wahl gilt LOGO_STANDARD (WLAN-Birne); die Wortmarke mit Punkt ist eine Wahl unter vielen.
  */
 export type LogoGroesse = 'sm' | 'md' | 'lg';
 

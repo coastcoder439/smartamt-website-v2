@@ -1,4 +1,4 @@
-import { LOGO_STANDARD, LOGO_ZEICHEN_IDS } from '@/lib/logos';
+import { LOGO_HEUTE, LOGO_STANDARD, LOGO_ZEICHEN_IDS } from '@/lib/logos';
 import { LOGO_ZEICHEN } from './logo-zeichen';
 
 /**
@@ -14,7 +14,9 @@ export default function LogoSprite() {
         .map(([id, z]) => `<symbol id="lz-${id}" viewBox="${z.viewBox}">${z.inhalt}</symbol>`)
         .join('');
     const sichtbar = [
-        `html[data-logo]:not([data-logo='${LOGO_STANDARD}']) .logo-mark{display:none}`,
+        // Die Wortmarke mit Signalpunkt nur, wenn sie gewählt ist; ohne data-logo (ohne Skript) gilt der Standard.
+        `html:not([data-logo='${LOGO_HEUTE}']) .logo-mark{display:none}`,
+        `html:not([data-logo]) .logo-bild[data-zeichen='${LOGO_STANDARD}']{display:inline-flex}`,
         ...LOGO_ZEICHEN_IDS.map((id) => `html[data-logo='${id}'] .logo-bild[data-zeichen='${id}']{display:inline-flex}`),
     ].join('');
     return (

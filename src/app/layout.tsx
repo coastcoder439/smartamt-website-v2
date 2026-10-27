@@ -119,7 +119,7 @@ const SKRIPT_FARBE =
     "try{var m=/[?&]farbe=([^&#]*)/.exec(location.search);var f=m?decodeURIComponent(m[1]).toLowerCase():'';d.setAttribute('data-farbe',['orange','hellblau','violett','gruen'].indexOf(f)>-1?f:'orange');}catch(e){}";
 
 // Logo-Wahl (gehört zur Farbwahl): Liest ?logo=… und setzt data-logo am html-Element; ein unbekannter oder fehlender Wert
-// ergibt die heutige Wortmarke. Die Werte kommen aus der einen Liste in lib/logos.ts.
+// ergibt den Standard (LOGO_STANDARD). Die Werte kommen aus der einen Liste in lib/logos.ts.
 const SKRIPT_LOGO = `try{var l=/[?&]logo=([^&#]*)/.exec(location.search);var w=l?decodeURIComponent(l[1]).toLowerCase():'';d.setAttribute('data-logo',${JSON.stringify(LOGO_IDS)}.indexOf(w)>-1?w:'${LOGO_STANDARD}');}catch(e){}`;
 
 const FRUEHES_SKRIPT =
@@ -136,7 +136,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <script dangerouslySetInnerHTML={{ __html: FRUEHES_SKRIPT }} />
             </head>
             <body>
-                {EINZELNES.farbwahl ? <LogoSprite /> : null}
+                <LogoSprite />
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(organisation).replace(/</g, '\\u003c') }}
