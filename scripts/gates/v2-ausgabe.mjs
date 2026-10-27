@@ -142,10 +142,10 @@ const pflicht = [
   // Team und Kontakt
   'Tobias Steffen',
   'Gründer von SmartAmt',
-  'Gründer der NX7.AGENCY. Kein Problem zu verzwickt: mehr als 50 Digitalprojekte für Mittelstand und Verwaltung.',
+  'Entwickler aus Leipzig. Löst, woran andere scheitern: seit Jahren für Mittelstand und Verwaltung, mehr als 50 Digitalprojekte.',
   'tobiassteffen.com',
   'Leon Pösken',
-  'Kaufmann und NGO-Gründer aus Leipzig.',
+  'Kaufmann und NGO-Gründer aus Leipzig. IT aus Überzeugung: bringt Verwaltung und Technik an einen Tisch.',
   '01556 6579408',
   'leon@smartamt.de',
   '0341 97853441',

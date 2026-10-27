@@ -27,7 +27,7 @@ export type Person = {
 const TOBIAS_STEFFEN: Person = {
     name: 'Tobias Steffen',
     rolle: 'Gründer von SmartAmt',
-    satz: 'Gründer der NX7.AGENCY. Kein Problem zu verzwickt: mehr als 50 Digitalprojekte für Mittelstand und Verwaltung.',
+    satz: 'Entwickler aus Leipzig. Löst, woran andere scheitern: seit Jahren für Mittelstand und Verwaltung, mehr als 50 Digitalprojekte.',
     foto: '/images/team/tobias-steffen.webp',
     breite: 1536,
     hoehe: 1527,
@@ -40,7 +40,7 @@ const TOBIAS_STEFFEN: Person = {
 const LEON_POESKEN: Person = {
     name: LEON.name,
     rolle: 'Entwickler',
-    satz: 'Kaufmann und NGO-Gründer aus Leipzig.',
+    satz: 'Kaufmann und NGO-Gründer aus Leipzig. IT aus Überzeugung: bringt Verwaltung und Technik an einen Tisch.',
     foto: '/images/team/leon-poesken.webp',
     breite: 1536,
     hoehe: 1527,
