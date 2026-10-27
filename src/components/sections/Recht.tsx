@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Check } from 'lucide-react';
 import { Label } from '@/components/ui/Label';
+import { EINZELNES } from '@/lib/abschnitte';
 import { RevealHeading, RevealText } from '@/components/ui/Reveal';
 import { AkkordeonKarte } from './c3/Akkordeon';
 import { Staffel } from './b3/Staffel';
@@ -24,7 +25,7 @@ import { Staffel } from './b3/Staffel';
  * Texte wörtlich aus website-copy-b2-b3.md.
  */
 
-const EINTRAEGE = [
+const ALLE_EINTRAEGE = [
     {
         grundlage: 'Art. 32 DSGVO',
         titel: 'Sicherheit nach dem Stand der Technik',
@@ -62,7 +63,12 @@ const EINTRAEGE = [
     },
 ] as const;
 
-export default function Recht() {
+// v3: Der Eintrag „KI-Kompetenz im Team“ wirbt für die KI-Fortbildung, die derzeit nicht angeboten wird; er bleibt im Code
+// und erscheint wieder mit EINZELNES.rechtKi.
+const EINTRAEGE = ALLE_EINTRAEGE.filter((e) => EINZELNES.rechtKi || e.grundlage !== 'Art. 4 KI-Verordnung');
+
+/** `weiss`: weiße statt hellgrauer Fläche (v3, /fragen: direkt unter den grauen Fragen, damit keine graue Doppelfläche entsteht). */
+export default function Recht({ weiss = false }: { weiss?: boolean }) {
     // Index der geöffneten Karte (-1: alle zu). Der Zustand der Karten selbst lebt im Browser (<details>); hier wird er
     // nur für die Leitlinie gespiegelt. Die erste Karte steht offen.
     const [aktiv, setAktiv] = useState(0);
@@ -82,14 +88,14 @@ export default function Recht() {
     };
 
     return (
-        <section id="recht" aria-labelledby="recht-titel" className="section surface-soft">
+        <section id="recht" aria-labelledby="recht-titel" className={`section ${weiss ? 'bg-bg' : 'surface-soft'}`}>
             <div className="wrap">
                 <div className="grid-12 gap-y-12">
                     <div className="col-span-12 lg:col-span-5">
                         <div className="lg:[@media(min-height:840px)]:sticky lg:[@media(min-height:840px)]:top-[calc(var(--header-h)+40px)]">
                             <Label>Recht &amp; Sicherheit</Label>
                             <RevealHeading as="h2" id="recht-titel" className="mt-4">
-                                Rechtssicher heißt: Wir kennen die Paragraphen.
+                                Rechtskonform heißt: Wir kennen die Paragraphen.
                             </RevealHeading>
                             <RevealText className="mt-6 max-w-[30em] text-lead">
                                 Für Websites öffentlicher Stellen gelten klare Regeln. Wir setzen sie technisch um, damit Sie

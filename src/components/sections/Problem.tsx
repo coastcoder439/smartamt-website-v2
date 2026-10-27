@@ -109,11 +109,12 @@ export default function Problem() {
             ref={wurzel}
             id="ortsausgang"
             aria-labelledby="ortsausgang-titel"
-            className={`${styles.flaeche} section relative isolate overflow-hidden pt-16 md:pt-20 lg:pt-24`}
+            className={`${EINZELNES.problemDunkel ? 'surface-night' : styles.flaeche} section relative isolate overflow-hidden !pb-16 pt-16 md:pt-20 lg:pt-24`}
         >
-            {/* Flächen: leises Punktraster hinter der Überschrift, weicher Übergang aus dem weißen Kunden-Abschnitt */}
-            <div aria-hidden="true" className={`dot-grid ${styles.raster}`} />
-            <div aria-hidden="true" className={styles.uebergang} />
+            {/* Flächen: leises Punktraster hinter der Überschrift, weicher Übergang aus dem weißen Kunden-Abschnitt (nur hell; v3 dunkel:
+                das Raster bleibt, gedämpft, ohne Übergang) */}
+            <div aria-hidden="true" className={`dot-grid ${styles.raster} ${EINZELNES.problemDunkel ? 'opacity-[0.18]' : ''}`} />
+            {EINZELNES.problemDunkel ? null : <div aria-hidden="true" className={styles.uebergang} />}
 
             {/* Mittig und schmal (Owner 26.10.2026: „Wenn unten mal eine Sache mittig ist, ne, so wie dieses hier, was ihre Gemeinde
                 hinter sich lässt …“; 27.10.2026: „Was ihre Gemeinde hinter sich lässt, dieses linksbündige … genau das meine ich“):
@@ -133,24 +134,34 @@ export default function Problem() {
                     // Drei Karten eng nebeneinander: oben das Symbol im Bernstein-Feld (offen) und die Nummer, darunter der Kern in
                     // Tinte (Platz für zwei Zeilen, damit die Restzeilen auf einer Linie stehen) und direkt darunter der Rest gedämpft.
                     // Das Auge liest jede Karte von oben nach unten, nicht quer über die Seite.
-                    <ul data-aussagen role="list" className="mt-10 grid gap-4 md:mt-14 md:gap-5 lg:grid-cols-3">
-                        {PROBLEM_AUSSAGEN.map((aussage, i) => {
+                    <ul data-aussagen role="list" className="mt-8 grid gap-3 md:mt-10 md:gap-4 lg:grid-cols-3">
+                        {PROBLEM_AUSSAGEN.map((aussage) => {
                             const Symbol = SYMBOLE[aussage.id];
                             return (
-                                <li key={aussage.id} data-aussage className="karte flex flex-col rounded-[20px] border-line-2 p-7 lg:p-9">
-                                    <div className="flex items-center justify-between">
-                                        <span aria-hidden="true" className="relative grid h-14 w-14 place-items-center rounded-2xl bg-warn-50 text-warn">
-                                            <Symbol size={26} strokeWidth={1.75} />
-                                            <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-bg bg-warn-dot" />
+                                // v3: drei kurze Zeilen (Plan 03-website-v3, Punkt 1b): Symbol links, Kern und Rest daneben.
+                                <li
+                                    key={aussage.id}
+                                    data-aussage
+                                    className={
+                                        EINZELNES.problemDunkel
+                                            ? 'flex items-start gap-4 rounded-[20px] border border-white/10 bg-white/[0.04] p-5 text-left lg:p-6'
+                                            : 'karte flex items-start gap-4 rounded-[20px] border-line-2 p-5 text-left lg:p-6'
+                                    }
+                                >
+                                    <span aria-hidden="true" className="relative grid h-12 w-12 flex-none place-items-center rounded-2xl bg-warn-50 text-warn">
+                                        <Symbol size={22} strokeWidth={1.75} />
+                                        <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-bg bg-warn-dot" />
+                                    </span>
+                                    <p className="leading-[1.3]">
+                                        <span
+                                            className={`block text-[1.1875rem] font-semibold tracking-[-0.015em] ${EINZELNES.problemDunkel ? 'text-[#fafafa]' : 'text-ink'}`}
+                                        >
+                                            {aussage.kern}
                                         </span>
-                                        <span aria-hidden="true" className="font-mono text-[0.75rem] tracking-[0.1em] text-ink-3">
-                                            0{i + 1}
+                                        <span className={`mt-0.5 block text-[1rem] ${EINZELNES.problemDunkel ? 'text-[#b4b4bb]' : 'text-ink-2'}`}>
+                                            {aussage.rest}
                                         </span>
-                                    </div>
-                                    <p className="mt-7 text-[clamp(1.375rem,1.1rem+0.8vw,1.75rem)] font-semibold leading-[1.2] tracking-[-0.02em] text-ink lg:min-h-[2.4em]">
-                                        {aussage.kern}
                                     </p>
-                                    <p className="mt-2 text-[1.0625rem] leading-[1.45] text-ink-2">{aussage.rest}</p>
                                 </li>
                             );
                         })}
@@ -160,7 +171,7 @@ export default function Problem() {
                 {/* Band: das Fazit unter den Karten, mittig wie der ganze Abschnitt: die drei Wörter in einer Reihe, der Knopf darunter */}
                 <div
                     data-abschluss
-                    className="karte relative isolate mt-8 overflow-hidden rounded-[24px] border-line-2 px-5 py-10 text-center sm:px-10 md:mt-10 md:px-14 lg:py-12"
+                    className="karte relative isolate mt-4 overflow-hidden rounded-[24px] border-line-2 px-5 py-8 text-center sm:px-10 md:mt-5 md:px-14 lg:py-9"
                 >
                     {/* Ruhiger Schmuck statt Farbfläche: eine kurze Linie in der Markenfarbe mittig am oberen Kartenrand */}
                     <span
@@ -196,7 +207,7 @@ export default function Problem() {
                         ))}
                     </p>
 
-                    <div className="mt-8 flex flex-col items-center">
+                    <div className="mt-6 flex flex-col items-center">
                         {EINZELNES.problemBandSatz ? (
                             <p data-rest className="mb-7 max-w-[30ch] text-lead text-ink-2">
                                 So sieht der digitale Ortseingang aus, den wir für Ihre Gemeinde bauen.

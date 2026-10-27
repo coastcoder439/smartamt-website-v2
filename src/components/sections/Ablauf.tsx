@@ -86,7 +86,7 @@ const ALLE_SCHRITTE: readonly { titel: string; text: ReactNode; Icon: LucideIcon
     },
 ];
 
-const SCHRITTE = ALLE_SCHRITTE.filter((schritt) => !schritt.nurSchulung || EINZELNES.ablaufSchrittSchulung);
+export const SCHRITTE = ALLE_SCHRITTE.filter((schritt) => !schritt.nurSchulung || EINZELNES.ablaufSchrittSchulung);
 
 /** Lage der gedachten Linie im Fenster, auf der die Spitze der orangen Linie läuft (60 % der Höhe). */
 const LINIE = 0.6;

@@ -49,20 +49,32 @@ export const TOBIAS = {
     telefonHref: KONTAKT.telefonHref,
 } as const;
 
-/** Alle Menüpunkte der Startseite in Reihenfolge; sichtbar sind nur die Abschnitte, die in lib/abschnitte.ts an sind. */
-const MENUE_ALLE = [
-    { label: 'Websites', id: 'websites' },
+/** Ein Menüpunkt: ein Abschnitt der Startseite (Anker `id`) oder eine eigene Seite (`href`). */
+export type MenuePunkt = { label: string; id: string; href?: string };
+
+/**
+ * Alle Menüpunkte in Reihenfolge. Anker (ohne `href`) erscheinen nur, wenn ihr Abschnitt in lib/abschnitte.ts an ist;
+ * Seiten (mit `href`) stehen immer da. Website v3: Angebot · Ablauf · Kontakt · Über uns · Fragen (Plan 03-website-v3,
+ * Punkt 4). Die Anker „Websites“ und „Referenzen“ stehen in v3 nicht im Menü (die Abschnitte bleiben auf der Startseite).
+ */
+const MENUE_ALLE: readonly MenuePunkt[] = [
     { label: 'Angebot', id: 'angebot' },
     { label: 'Ablauf', id: 'ablauf' },
     { label: 'Schulungen', id: 'schulungen' },
     { label: 'Recht & Sicherheit', id: 'recht' },
-    { label: 'Referenzen', id: 'referenzen' },
-    { label: 'Über uns', id: 'ueber-uns' },
     { label: 'Kontakt', id: 'kontakt' },
-] as const;
+    { label: 'Über uns', id: 'seite-ueber-uns', href: '/ueber-uns/' },
+    { label: 'Fragen', id: 'seite-fragen', href: '/fragen/' },
+];
 
-/** Hauptmenü v2: Websites · Angebot · Ablauf · Referenzen · Über uns · Kontakt. */
-export const MENUE: readonly { label: string; id: string }[] = MENUE_ALLE.filter((m) => abschnittSichtbar(m.id));
+/** Hauptmenü v3: Angebot · Ablauf · Kontakt · Über uns · Fragen. */
+export const MENUE: readonly MenuePunkt[] = MENUE_ALLE.filter((m) => m.href !== undefined || abschnittSichtbar(m.id));
+
+/** Unterseiten der Website v3 (Fuß; im Menü stehen sie über MENUE). */
+export const UNTERSEITEN = [
+    { label: 'Über uns', href: '/ueber-uns/' },
+    { label: 'Häufige Fragen', href: '/fragen/' },
+] as const;
 
 export const RECHTSSEITEN = [
     { label: 'Impressum', href: '/impressum/' },

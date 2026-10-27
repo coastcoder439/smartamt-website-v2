@@ -14,36 +14,41 @@ import Schulungen from '@/components/sections/Schulungen';
 import Team from '@/components/sections/Team';
 import Vision from '@/components/sections/Vision';
 import Websites from '@/components/sections/Websites';
-import { ABSCHNITTE } from '@/lib/abschnitte';
+import Stimmen from '@/components/sections/Stimmen';
+import { ABSCHNITTE, EINZELNES } from '@/lib/abschnitte';
 
 export const metadata: Metadata = {
     alternates: { canonical: '/' },
 };
 
 /**
- * Reihenfolge der Website v2 (docs/packages/02-website-v2/design/bauauftrag-v2.md, Entscheidung 4):
- * Hero → Kunden (Logos) → Problem samt Band → Websites („Eine Website, die Ihre Gemeinde gut vertritt.“ mit
- * Vorher/Nachher) → Angebot → Ablauf → Referenzen → Team → Fragen → Kontakt.
+ * Reihenfolge der Website v3 (docs/packages/03-website-v3/PACKAGE.md, Plan Punkt 1): Hero → Problem („Was Ihre Gemeinde
+ * hinter sich lässt.“, drei Zeilen) → Beweis (Websites: Vorher/Nachher mit Befund-Karten) → Angebot samt Ablauf (vier
+ * Vorteile, vier Schritte) → Vertrauen (Logo-Band der Kunden, zwei Zitate, eine Zeile Identität mit Link auf „Über uns“) →
+ * Kontakt. Owner 27.10.2026: „Also quasi aufgeräumter, ne, wirklich auf den Fokus auf das Wesentliche und die Selling
+ * Points und den Sales legen.“
  *
  * Ausgeblendet, nicht gelöscht (Owner 26.10.2026: „Die kannst du ja alle quasi ausblenden, archivieren“): Leistungen,
- * Schulungen, Lage, Recht, Vision. Die Schalter stehen in lib/abschnitte.ts; die Komponenten bleiben unverändert im Code
- * und erscheinen an ihrer alten Stelle wieder, wenn ihr Schalter auf `true` steht.
+ * Schulungen, Lage, Recht, Vision (seit v2); Team und Fragen stehen in v3 auf /ueber-uns und /fragen, Lage und Vision auf
+ * /ueber-uns, Recht auf /fragen. Die Schalter stehen in lib/abschnitte.ts; jede Komponente erscheint an ihrer alten Stelle
+ * wieder, wenn ihr Schalter auf `true` steht.
  */
 export default function HomePage() {
     return (
         <>
             <Hero />
-            <Kunden />
+            {EINZELNES.kundenUnterHero ? <Kunden /> : null}
             <Problem />
             {ABSCHNITTE.leistungen ? <Leistungen /> : null}
             {ABSCHNITTE.websites ? <Websites /> : null}
             {ABSCHNITTE.angebot ? <Angebot /> : null}
-            {ABSCHNITTE.ablauf ? <Ablauf /> : null}
+            {ABSCHNITTE.ablauf && EINZELNES.ablaufEigenerAbschnitt ? <Ablauf /> : null}
             {ABSCHNITTE.schulungen ? <Schulungen /> : null}
             {ABSCHNITTE.lage ? <Lage /> : null}
             {ABSCHNITTE.recht ? <Recht /> : null}
             {ABSCHNITTE.vision ? <Vision /> : null}
-            {ABSCHNITTE.referenzen ? <Referenzen /> : null}
+            {!EINZELNES.kundenUnterHero ? <Kunden /> : null}
+            {ABSCHNITTE.referenzen ? EINZELNES.referenzenBand ? <Referenzen /> : <Stimmen /> : null}
             {ABSCHNITTE['ueber-uns'] ? <Team /> : null}
             {ABSCHNITTE.faq ? <Faq /> : null}
             {ABSCHNITTE.kontakt ? <Kontakt /> : null}

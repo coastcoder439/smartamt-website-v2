@@ -22,7 +22,7 @@ export default function Team() {
         <section id="ueber-uns" aria-labelledby="ueber-uns-titel" className="section">
             <div className="wrap">
                 <div className="grid-12 gap-y-12">
-                    <div className="col-span-12 lg:col-span-5">
+                    <div className="col-span-12 self-start lg:sticky lg:top-[calc(var(--header-h)+3rem)] lg:col-span-5">
                         <Label>Über uns</Label>
                         <RevealHeading as="h2" id="ueber-uns-titel" className="mt-4">
                             Ein Projekt der NX7.AGENCY.
@@ -32,6 +32,27 @@ export default function Team() {
                             und öffentliche Verwaltung. SmartAmt bündelt dieses Wissen für Gemeinden: Websites, die halten,
                             was sie versprechen.
                         </RevealText>
+
+                        {/* v3: Sitz und Link zur NX7.AGENCY stehen in der linken Spalte (vorher als Zeile unter dem Team); die Spalte
+                            bleibt ab 1024 px beim Scrollen stehen. Owner 27.10.2026: „Da sind noch so viele leere Flächen“. */}
+                        <div className="mt-10 flex flex-col items-start gap-3 border-t border-line pt-6">
+                            <p className="font-mono text-klein text-ink-2">
+                                Sitz: {KONTAKT.strasse}, {KONTAKT.plz} {KONTAKT.ort} · E-Mail{' '}
+                                <a href={`mailto:${KONTAKT.email}`} className="link">
+                                    {KONTAKT.email}
+                                </a>
+                            </p>
+                            <a
+                                href={ABSENDER.url}
+                                target="_blank"
+                                rel="noopener"
+                                className="link inline-flex min-h-[2.75rem] items-center gap-2 font-semibold"
+                            >
+                                NX7.AGENCY besuchen
+                                <ExternalLink aria-hidden="true" size={18} strokeWidth={1.75} />
+                                <span className="sr-only">(öffnet in neuem Tab)</span>
+                            </a>
+                        </div>
                     </div>
 
                     <div className="col-span-12 lg:col-span-7">
@@ -39,7 +60,7 @@ export default function Team() {
                             {PERSONEN.map((person) => (
                                 <li key={person.name}>
                                     <article className="karte group/person flex h-full flex-col overflow-hidden transition-[transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:shadow-md">
-                                        <div className="relative aspect-[5/6] overflow-hidden bg-bg-3">
+                                        <div className="relative aspect-square overflow-hidden bg-bg-3">
                                             <Image
                                                 src={person.foto}
                                                 width={person.breite}
@@ -109,24 +130,6 @@ export default function Team() {
                     </div>
                 </div>
 
-                <div className="mt-16 flex flex-col gap-4 border-t border-line pt-8 lg:mt-24 lg:flex-row lg:items-center lg:justify-between">
-                    <p className="font-mono text-klein text-ink-2">
-                        Sitz: {KONTAKT.strasse}, {KONTAKT.plz} {KONTAKT.ort} · E-Mail{' '}
-                        <a href={`mailto:${KONTAKT.email}`} className="link">
-                            {KONTAKT.email}
-                        </a>
-                    </p>
-                    <a
-                        href={ABSENDER.url}
-                        target="_blank"
-                        rel="noopener"
-                        className="link inline-flex min-h-[2.75rem] items-center gap-2 font-semibold"
-                    >
-                        NX7.AGENCY besuchen
-                        <ExternalLink aria-hidden="true" size={18} strokeWidth={1.75} />
-                        <span className="sr-only">(öffnet in neuem Tab)</span>
-                    </a>
-                </div>
             </div>
         </section>
     );

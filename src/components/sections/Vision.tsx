@@ -69,7 +69,7 @@ export default function Vision() {
                 </RevealHeading>
 
                 <div className="grid-12 mt-12 gap-y-8 md:mt-16 lg:mt-20">
-                    <div className="col-span-12 lg:col-span-8 lg:col-start-5 lg:row-start-1">
+                    <div className="col-span-12 lg:col-span-10 lg:col-start-1 lg:row-start-1">
                         <div className="flex gap-6 md:gap-8">
                             <Leitlinie
                                 staerke={2}
@@ -92,9 +92,9 @@ export default function Vision() {
                     </div>
 
                     {/* Randnotiz: Quellenzeile, am Anfang des Absatzes ausgerichtet */}
-                    <div className="col-span-12 lg:col-span-3 lg:col-start-1 lg:row-start-1">
-                        <div className="lg:sticky lg:top-[calc(var(--header-h)+48px)]">
-                            <RevealText className="max-w-[34ch] border-t border-line-2 pt-4 font-mono text-klein text-ink-3 md:ml-[calc(2px+2rem)] lg:ml-0">
+                    <div className="col-span-12 lg:col-span-10 lg:col-start-1 lg:row-start-2">
+                        <div>
+                            <RevealText className="max-w-[34ch] border-t border-line-2 pt-4 font-mono text-klein text-ink-3 md:ml-[calc(2px+2rem)]">
                                 Quellen: UN E-Government Survey 2024; § 1a Onlinezugangsgesetz in der Fassung vom 19.07.2024.
                             </RevealText>
                         </div>

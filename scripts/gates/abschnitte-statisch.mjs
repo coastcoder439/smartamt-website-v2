@@ -1,4 +1,7 @@
-// Gate Website v2 (Quelltext): Ausgeblendet heißt nicht gelöscht, und die sichtbare Seite hält die Owner-Vorgaben.
+// Gate Website v2 und v3 (Quelltext): Ausgeblendet heißt nicht gelöscht, und die sichtbare Seite hält die Owner-Vorgaben.
+// v3 (docs/packages/03-website-v3): Team und Fragen stehen nicht mehr auf der Startseite, sondern auf /ueber-uns und /fragen
+// (Schalter ueber-uns und faq auf false, die Seiten müssen die Komponenten zeigen); das Menü nennt Angebot, Ablauf, Kontakt
+// und die beiden Seiten; Recht & Sicherheit ist auf /fragen sichtbar und unterliegt darum auch der Regel „nie rechtssicher“.
 // Geprüft wird im Quelltext (kein Browser, kein Build nötig); das Ergebnis im gebauten Export prüft v2-ausgabe.mjs.
 //
 //  1. Schalter (src/lib/abschnitte.ts): Leistungen, Schulungen, Lage, Recht, Vision und die Einzelteile (Hero-Knopf
@@ -24,10 +27,16 @@ const wert = (name) => {
 for (const id of ['leistungen', 'schulungen', 'lage', 'recht', 'vision']) {
   if (wert(id) !== 'false') fehler.push(`abschnitte.ts: Abschnitt ${id} muss ausgeblendet sein (false), ist ${wert(id)}`);
 }
-for (const id of ['websites', 'angebot', 'ablauf', 'referenzen', 'ueber-uns', 'faq', 'kontakt']) {
+for (const id of ['websites', 'angebot', 'ablauf', 'referenzen', 'kontakt']) {
   if (wert(id) !== 'true') fehler.push(`abschnitte.ts: Abschnitt ${id} muss sichtbar sein (true), ist ${wert(id)}`);
 }
-for (const name of ['heroKnopfSchulung', 'ablaufSchrittSchulung', 'teamEremiyaRifat', 'anliegenSchulung', 'anliegenItSchulung', 'faqSchulung', 'problemKarten', 'problemBandSatz', 'heroWebsiteCheck']) {
+// v3: Team und Fragen auf den Unterseiten, nicht auf der Startseite
+for (const id of ['ueber-uns', 'faq']) {
+  if (wert(id) !== 'false') fehler.push(`abschnitte.ts: Abschnitt ${id} steht in v3 auf einer Unterseite (false auf der Startseite), ist ${wert(id)}`);
+}
+for (const name of ['heroKnopfSchulung', 'ablaufSchrittSchulung', 'teamEremiyaRifat', 'anliegenSchulung', 'anliegenItSchulung', 'faqSchulung', 'problemKarten', 'problemBandSatz', 'heroWebsiteCheck',
+  // v3: kurze Startseite (Plan 03-website-v3, Punkt 1), alles nur ausgeblendet
+  'ablaufEigenerAbschnitt', 'heroErsterSatz', 'kundenUnterHero', 'kundenZweiteSpur', 'referenzenBand', 'angebotVergleich', 'angebotMerkmale', 'angebotSchlusskarte', 'websitesPruefliste', 'kontaktErstgespraechBand', 'lageSchulungen', 'rechtKi', 'heroSprungzeile']) {
   if (wert(name) !== 'false') fehler.push(`abschnitte.ts: ${name} muss ausgeblendet sein (false), ist ${wert(name)}`);
 }
 if (!/Die kannst du ja alle quasi ausblenden, archivieren/.test(schalter)) fehler.push('abschnitte.ts: Owner-Zitat zum Ausblenden fehlt im Kommentar');
@@ -50,6 +59,14 @@ const AUSGEBLENDET = [
   'public/images/team/eremiya-rifat.webp',
   'public/images/schulung/karte-arbeitsalltag.webp',
   'public/images/schulung/modul-grundlagen.png',
+  // v3: auf der Startseite ausgeblendet oder auf Unterseiten umgezogen
+  'src/components/sections/Ablauf.tsx',
+  'src/components/sections/Referenzen.tsx',
+  'src/components/sections/c3/ReferenzBand.tsx',
+  'src/components/sections/b2/Pruefliste.tsx',
+  'src/components/sections/c2/BriefBild.tsx',
+  'src/components/sections/Team.tsx',
+  'src/components/sections/Faq.tsx',
 ];
 for (const rel of AUSGEBLENDET) if (!existiert(rel)) fehler.push(`${rel}: Datei fehlt (ausgeblendet heißt nicht gelöscht)`);
 
@@ -65,6 +82,35 @@ for (const [komponente, id] of [
   if (!new RegExp(`ABSCHNITTE\\.${id}\\s*\\?\\s*<${komponente} />`).test(seite)) fehler.push(`page.tsx: ${komponente} hängt nicht am Schalter ABSCHNITTE.${id}`);
 }
 if (!/ABSCHNITTE\.angebot\s*\?\s*<Angebot \/>/.test(seite)) fehler.push('page.tsx: Angebot hängt nicht am Schalter ABSCHNITTE.angebot');
+// v3: die früheren Startseiten-Teile hängen weiter an ihren Schaltern (nicht entfernt)
+for (const [muster, was] of [
+  [/ABSCHNITTE\.ablauf && EINZELNES\.ablaufEigenerAbschnitt \? <Ablauf \/>/, 'Ablauf am Schalter ablaufEigenerAbschnitt'],
+  [/EINZELNES\.referenzenBand \? <Referenzen \/> : <Stimmen \/>/, 'Referenzen-Band am Schalter referenzenBand'],
+  [/ABSCHNITTE\['ueber-uns'\] \? <Team \/>/, 'Team am Schalter ueber-uns'],
+  [/ABSCHNITTE\.faq \? <Faq \/>/, 'Fragen am Schalter faq'],
+  [/EINZELNES\.kundenUnterHero \? <Kunden \/>/, 'Kunden am Schalter kundenUnterHero'],
+]) {
+  if (!muster.test(seite)) fehler.push(`page.tsx: ${was} fehlt (nur ausblenden, nicht entfernen)`);
+}
+// v3: die Unterseiten zeigen, was von der Startseite umgezogen ist (Plan 03-website-v3, Punkt 2 und 3)
+for (const [rel, komponenten] of [
+  ['src/app/ueber-uns/page.tsx', ['Leitbild', 'Vision', 'Lage', 'Team']],
+  ['src/app/fragen/page.tsx', ['Faq', 'Recht']],
+]) {
+  if (!existiert(rel)) {
+    fehler.push(`${rel} fehlt`);
+    continue;
+  }
+  const text = lies(rel);
+  for (const k of komponenten) if (!new RegExp(`<${k}(?: [^>]*)? />`).test(text)) fehler.push(`${rel}: <${k} /> fehlt`);
+}
+const angebotQuelle = lies('src/components/sections/Angebot.tsx');
+for (const name of ['angebotVergleich', 'angebotMerkmale', 'angebotSchlusskarte', 'ablaufEigenerAbschnitt']) {
+  if (!new RegExp(`EINZELNES\.${name}`).test(angebotQuelle)) fehler.push(`Angebot.tsx: Teil am Schalter ${name} fehlt (nur ausblenden)`);
+}
+for (const text of ['Übliches Projekt', 'Ohne Cookies und Tracking', 'Preis auf Anfrage.']) {
+  if (!angebotQuelle.includes(text)) fehler.push(`Angebot.tsx: „${text}“ ist aus dem Code verschwunden (nur ausblenden)`);
+}
 
 const personen = lies('src/components/sections/c3/personen.ts');
 if (!/Eremiya Rifat/.test(personen) || !/eremiya-rifat\.webp/.test(personen)) fehler.push('personen.ts: Eremiya Rifat ist aus dem Code verschwunden (nur ausblenden)');
@@ -80,12 +126,15 @@ for (const text of ['KI-Fortbildung anfragen', 'IT-Schulung anfragen']) {
 
 // ---- 3. Menü, Sprungleiste, Fuß aus den Schaltern --------------------------------------------------
 const site = lies('src/lib/site.ts');
-if (!/MENUE[^=]*=\s*MENUE_ALLE\.filter\(\(m\)\s*=>\s*abschnittSichtbar\(m\.id\)\)/.test(site)) fehler.push('site.ts: MENUE wird nicht aus den Schaltern gefiltert');
+if (!/MENUE[^=]*=\s*MENUE_ALLE\.filter\(\(m\)\s*=>\s*m\.href !== undefined \|\| abschnittSichtbar\(m\.id\)\)/.test(site)) fehler.push('site.ts: MENUE wird nicht aus den Schaltern gefiltert');
 const sprung = lies('src/components/layout/leistungen.ts');
 if (!/ALLE\.filter\(\(l\)\s*=>\s*abschnittSichtbar\(l\.id\)\)/.test(sprung)) fehler.push('leistungen.ts: die Sprungziele werden nicht aus den Schaltern gefiltert');
 const menueIds = [...site.matchAll(/id:\s*'([^']+)'/g)].map((m) => m[1]);
-for (const id of ['websites', 'angebot', 'ablauf', 'referenzen', 'ueber-uns', 'kontakt']) {
+for (const id of ['angebot', 'ablauf', 'kontakt']) {
   if (!menueIds.includes(id)) fehler.push(`site.ts: Menüpunkt ${id} fehlt`);
+}
+for (const href of ['/ueber-uns/', '/fragen/']) {
+  if (!site.includes(`href: '${href}'`)) fehler.push(`site.ts: Menüpunkt ${href} fehlt`);
 }
 const hero = lies('src/components/sections/Hero.tsx');
 const kopf = lies('src/components/layout/Header.tsx');
@@ -108,9 +157,9 @@ if (!beschreibung || /\bKI\b|Schulung|Fortbildung|schult/.test(beschreibung)) fe
 
 // ---- 4. Nie zweimal „sicher“ ---------------------------------------------------------------------------
 const SICHTBARE_AUSNAHMEN = new Set([
-  // ausgeblendete Abschnitte (bleiben im Code, werden nicht angezeigt)
+  // ausgeblendete Abschnitte (bleiben im Code, werden nicht angezeigt); Recht.tsx ist in v3 auf /fragen sichtbar und darum
+  // keine Ausnahme mehr
   'src/components/sections/Leistungen.tsx',
-  'src/components/sections/Recht.tsx',
 ]);
 for (const rel of quellen()) {
   if (SICHTBARE_AUSNAHMEN.has(rel)) continue;
@@ -166,4 +215,9 @@ for (const text of [
 if (!/<svg viewBox="0 0 1000 212"/.test(seiten) || !/Kirchturm|Kirche/.test(seiten)) fehler.push('MusterbachSeiten.tsx: die gezeichnete Silhouette (Haus, Kirchturm, Bäume) fehlt');
 if (/Platzhalter|vStreifen|vBanner/.test(lies('src/components/sections/b2/Vergleich.module.css') + seiten)) fehler.push('Vergleich: Reste des alten Platzhalters');
 
+// ---- 7. v3: Punktraster nur noch im Hero (Owner 27.10.2026: „aber nicht überall diese gepunkteten Hintergründe … Das sieht sehr nach KI aus.“) --
+if (wert('punktraster') !== 'false') fehler.push('abschnitte.ts: punktraster muss false sein (Punktraster nur im Hero)');
+if (!/EINZELNES\.punktraster \? '' : ' punkte-aus'/.test(lies('src/app/layout.tsx'))) fehler.push('layout.tsx: Klasse punkte-aus am <html> hängt nicht am Schalter punktraster');
+if (!/\.punkte-aus \.dot-grid \{\s*background-image: none !important;/.test(lies('src/styles/globals.css'))) fehler.push('globals.css: Regel .punkte-aus .dot-grid fehlt');
+if (!existiert('src/components/sections/c2/Licht.tsx')) fehler.push('Licht.tsx fehlt (Raster nur abschalten, nicht löschen)');
 fertig('ABSCHNITTE-STATISCH', fehler);

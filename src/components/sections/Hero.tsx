@@ -209,10 +209,21 @@ export default function Hero() {
                     Vertrauenszeile (Zeile 2), die Produktansicht rechts über beide Zeilen, oben bündig mit dem Text. */}
                 <div className="grid-12 mt-6 items-start gap-y-8 lg:mt-8 lg:grid-rows-[auto_1fr] lg:gap-y-0">
                     <div className="col-span-12 lg:col-span-5 lg:row-start-1 lg:-mt-1">
-                        <p data-intro="text" className="max-w-[34em] text-[1.0625rem] leading-[1.55] text-ink-2 sm:text-lead">
-                            Die Website ist das Erste, was Bürgerinnen, Bürger und Unternehmen von Ihrer Gemeinde sehen. Wir machen
-                            Ihre Website sicher, barrierefrei und rechtskonform.
-                        </p>
+                        {EINZELNES.heroSatzMitAngebot ? (
+                            <p
+                                data-intro="text"
+                                className="max-w-[24em] text-[clamp(1.25rem,1.05rem+0.6vw,1.5rem)] font-medium leading-[1.4] tracking-[-0.015em] text-ink"
+                            >
+                                Wir bauen Websites für Gemeinden, Ämter und Behörden: sicher, barrierefrei und rechtskonform.
+                            </p>
+                        ) : (
+                            <p data-intro="text" className="max-w-[34em] text-[1.0625rem] leading-[1.55] text-ink-2 sm:text-lead">
+                                {EINZELNES.heroErsterSatz
+                                    ? 'Die Website ist das Erste, was Bürgerinnen, Bürger und Unternehmen von Ihrer Gemeinde sehen. '
+                                    : null}
+                                Wir machen Ihre Website sicher, barrierefrei und rechtskonform.
+                            </p>
+                        )}
 
                         <div data-intro="cta" className="mt-6 flex flex-wrap gap-3 lg:mt-9">
                             <Magnet>
@@ -258,27 +269,29 @@ export default function Hero() {
                         </ul>
 
                         {/* Sprungziele (nur sichtbare Abschnitte): füllt die Spalte unter der Vertrauenszeile (ab 1024 px) */}
-                        <nav data-intro="leist" aria-label="Auf einen Blick" className="mt-9 hidden border-t border-line pt-5 lg:block">
-                            <Label>Auf einen Blick</Label>
-                            <ul className="mt-2.5 grid grid-flow-col auto-cols-fr divide-x divide-line">
-                                {LEISTUNGEN.map((l) => (
-                                    <li key={l.id} className="px-4 first:pl-0 last:pr-0">
-                                        <AnkerLink
-                                            id={l.id}
-                                            className="group/l flex min-h-[2.75rem] items-start justify-between gap-2 py-1.5 text-[0.9375rem] font-semibold leading-snug text-ink transition-colors hover:text-brand-ink"
-                                        >
-                                            <span>{l.label}</span>
-                                            <ArrowRight
-                                                aria-hidden="true"
-                                                size="0.9375rem"
-                                                strokeWidth={1.75}
-                                                className="mt-[0.1875rem] flex-none text-ink-3 transition-all duration-300 group-hover/l:translate-x-0.5 group-hover/l:text-brand-ink"
-                                            />
-                                        </AnkerLink>
-                                    </li>
-                                ))}
-                            </ul>
-                        </nav>
+                        {EINZELNES.heroSprungzeile ? (
+                            <nav data-intro="leist" aria-label="Auf einen Blick" className="mt-9 hidden border-t border-line pt-5 lg:block">
+                                <Label>Auf einen Blick</Label>
+                                <ul className="mt-2.5 grid grid-flow-col auto-cols-fr divide-x divide-line">
+                                    {LEISTUNGEN.map((l) => (
+                                        <li key={l.id} className="px-4 first:pl-0 last:pr-0">
+                                            <AnkerLink
+                                                id={l.id}
+                                                className="group/l flex min-h-[2.75rem] items-start justify-between gap-2 py-1.5 text-[0.9375rem] font-semibold leading-snug text-ink transition-colors hover:text-brand-ink"
+                                            >
+                                                <span>{l.label}</span>
+                                                <ArrowRight
+                                                    aria-hidden="true"
+                                                    size="0.9375rem"
+                                                    strokeWidth={1.75}
+                                                    className="mt-[0.1875rem] flex-none text-ink-3 transition-all duration-300 group-hover/l:translate-x-0.5 group-hover/l:text-brand-ink"
+                                                />
+                                            </AnkerLink>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </nav>
+                        ) : null}
                     </div>
                 </div>
             </div>

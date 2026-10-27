@@ -4,6 +4,7 @@ import { EINZELNES } from '@/lib/abschnitte';
 import Befunde from './b2/Befunde';
 import Pruefliste from './b2/Pruefliste';
 import Vergleich from './b2/Vergleich';
+import WebsiteKnopf from './b2/WebsiteKnopf';
 import { ABSCHNITT_SOFT, LABEL_GROSS } from './c2/abschnitt';
 
 /**
@@ -32,25 +33,47 @@ import { ABSCHNITT_SOFT, LABEL_GROSS } from './c2/abschnitt';
 export default function Websites() {
     return (
         <section id="websites" aria-labelledby="websites-titel" className={`surface-soft ${ABSCHNITT_SOFT}`}>
-            <div className="wrap grid-12 items-start gap-y-12">
-                <div className="col-span-12 lg:sticky lg:top-[calc(var(--header-h)+56px)] lg:col-span-5">
-                    <Label className={LABEL_GROSS}>Websites für Gemeinden</Label>
-                    <RevealHeading as="h2" id="websites-titel" className="mt-4">
-                        Eine Website, die Ihre Gemeinde gut vertritt.
-                    </RevealHeading>
-                    <RevealText className="mt-6 max-w-[34em]">
-                        Wir bauen neu oder bringen Ihre Website in Ordnung. Ihre Inhalte bleiben, wir übernehmen Technik und
-                        Pflichtangaben.
-                    </RevealText>
-                </div>
+            {EINZELNES.websitesPruefliste ? (
+                <div className="wrap grid-12 items-start gap-y-12">
+                    <div className="col-span-12 lg:sticky lg:top-[calc(var(--header-h)+56px)] lg:col-span-5">
+                        <Label className={LABEL_GROSS}>Websites für Gemeinden</Label>
+                        <RevealHeading as="h2" id="websites-titel" className="mt-4">
+                            Eine Website, die Ihre Gemeinde gut vertritt.
+                        </RevealHeading>
+                        <RevealText className="mt-6 max-w-[34em]">
+                            Wir bauen neu oder bringen Ihre Website in Ordnung. Ihre Inhalte bleiben, wir übernehmen Technik und
+                            Pflichtangaben.
+                        </RevealText>
+                    </div>
 
-                <div className="col-span-12 lg:col-span-7">
-                    <Pruefliste />
+                    <div className="col-span-12 lg:col-span-7">
+                        <Pruefliste />
+                    </div>
                 </div>
-            </div>
+            ) : (
+                // v3: Überschrift links, ein Satz und der Knopf rechts, unten bündig (wie im Angebot); die Prüfliste ist ausgeblendet.
+                <div className="wrap">
+                    <Label className={LABEL_GROSS}>Websites für Gemeinden</Label>
+                    <div className="grid-12 mt-4 items-end gap-y-6">
+                        <div className="col-span-12 lg:col-span-7">
+                            <RevealHeading as="h2" id="websites-titel">
+                                Eine Website, die Ihre Gemeinde gut vertritt.
+                            </RevealHeading>
+                        </div>
+                        <div className="col-span-12 lg:col-span-5 lg:pb-2">
+                            <RevealText className="max-w-[32ch] text-lead text-ink-2">
+                                Wir bauen neu oder bringen Ihre Website in Ordnung. Ihre Inhalte bleiben.
+                            </RevealText>
+                            <div className="mt-6">
+                                <WebsiteKnopf />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Wisch und sechs Befund-Karten in einem Bild; bewusst breiter als der Textspalten-Rahmen (nur der Seitenrand bleibt) */}
-            <div className="mx-auto mt-[clamp(56px,6vw,96px)] max-w-[110rem] px-[var(--gutter)]">
+            <div className="mx-auto mt-[clamp(40px,4vw,64px)] max-w-[110rem] px-[var(--gutter)]">
                 <Vergleich />
             </div>
 

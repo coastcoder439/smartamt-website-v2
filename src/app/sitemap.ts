@@ -9,6 +9,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const stand = new Date();
     return [
         { url: `${SITE_URL}/`, lastModified: stand, changeFrequency: 'monthly', priority: 1 },
+        { url: `${SITE_URL}/ueber-uns/`, lastModified: stand, changeFrequency: 'monthly', priority: 0.6 },
+        { url: `${SITE_URL}/fragen/`, lastModified: stand, changeFrequency: 'monthly', priority: 0.6 },
         { url: `${SITE_URL}/impressum/`, lastModified: stand, changeFrequency: 'yearly', priority: 0.2 },
         { url: `${SITE_URL}/datenschutz/`, lastModified: stand, changeFrequency: 'yearly', priority: 0.2 },
         { url: `${SITE_URL}/barrierefreiheit/`, lastModified: stand, changeFrequency: 'yearly', priority: 0.2 },

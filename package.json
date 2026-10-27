@@ -9,7 +9,7 @@
         "lint": "eslint .",
         "bilder": "node scripts/erzeuge-bilder.mjs",
         "gates": "node scripts/gates/a11y-statisch.mjs && node scripts/gates/ci-statisch.mjs && node scripts/gates/lenis-css.mjs && node scripts/gates/datenschutz-statisch.mjs && node scripts/gates/header-gleich.mjs && node scripts/gates/abschnitte-statisch.mjs && node scripts/gates/farbwahl-statisch.mjs",
-        "gates:out": "node scripts/gates/v2-ausgabe.mjs"
+        "gates:out": "node scripts/gates/v3-ausgabe.mjs"
     },
     "dependencies": {
         "clsx": "^2.1.1",

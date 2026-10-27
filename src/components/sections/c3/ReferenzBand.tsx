@@ -60,9 +60,9 @@ function LogoOderKreis({ e }: { e: Referenz }) {
  * Karten einer Reihe gleich hohe Zeilen: Die Trennlinie über dem Autorenblock und die Logo-Reihe liegen in jeder
  * Karte auf einer Höhe, egal wie viele Zeilen Rolle, Firma und Projekt brauchen.
  */
-function Karte({ e }: { e: Referenz }) {
+export function Karte({ e, klasse = 'row-span-3 grid snap-start grid-rows-[subgrid]' }: { e: Referenz; klasse?: string }) {
     return (
-        <figure className="karte row-span-3 grid snap-start grid-rows-[subgrid] p-6 sm:p-7">
+        <figure className={`karte ${klasse} p-6 sm:p-7`}>
             <div className="flex min-h-[3.5rem] items-center justify-between gap-3">
                 <LogoOderKreis e={e} />
                 {e.oeffentlich ? (

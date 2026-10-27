@@ -41,8 +41,11 @@ import s from './Vergleich.module.css';
  * Die Startzustände setzt erst dieser Effekt (data-pinned, x der drei Teile, Zähler 6). Scheitert er, bleibt Zustand 1 stehen.
  */
 
-/** Scrollweg des angehefteten Bereichs in Bildschirmhöhen (etwa 180 vh). */
-const SCROLLWEG_VH = 1.8;
+/**
+ * Scrollweg des angehefteten Bereichs in Bildschirmhöhen. v2: 1,8 (etwa 180 vh). v3: 0,65, damit die Startseite bei 1440 × 900
+ * höchstens 8 Bildschirme lang ist (Plan 03-website-v3, Punkt 1); der Regler fährt dieselbe Strecke, nur schneller.
+ */
+const SCROLLWEG_VH = 0.65;
 /** Zeitleiste: Beginn und Dauer der Reglerfahrt und Gesamtlänge (kurze Ruhe davor und danach). */
 const T0 = 0.1;
 const DAUER = 1;

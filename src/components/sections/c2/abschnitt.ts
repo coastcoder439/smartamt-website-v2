@@ -16,10 +16,12 @@ const ANKER =
     "relative isolate scroll-mt-[var(--header-h)] before:pointer-events-none before:absolute before:inset-x-0 before:-top-2 before:h-2 before:content-['']";
 
 /** Abschnitt auf weißem Grund. */
-export const ABSCHNITT_WEISS = `${ANKER} before:bg-white pt-[clamp(4rem,7vw,6.5rem)] pb-[clamp(4.5rem,8vw,7.5rem)]`;
+// v3 (Owner 27.10.2026: „Da sind noch so viele leere Flächen“): kleinere Abstände; v2: pt clamp(4rem,7vw,6.5rem), pb clamp(4.5rem,8vw,7.5rem).
+export const ABSCHNITT_WEISS = `${ANKER} before:bg-white pt-[clamp(3rem,5vw,4.5rem)] pb-[clamp(3.5rem,5.5vw,5rem)]`;
 
 /** Abschnitt auf der ruhigen Fläche (surface-soft). */
-export const ABSCHNITT_SOFT = `${ANKER} before:bg-bg-2 pt-[clamp(4.5rem,7.5vw,7rem)] pb-24 lg:pb-14`;
+// v3: v2 hatte pt clamp(4.5rem,7.5vw,7rem).
+export const ABSCHNITT_SOFT = `${ANKER} before:bg-bg-2 pt-[clamp(3.5rem,5.5vw,5rem)] pb-24 lg:pb-14`;
 
 /** Label (Eyebrow) in 13 statt 12 px: auf Weiß und am Handy sicher lesbar (Farbe bleibt brand-ink, 5,2:1). */
 export const LABEL_GROSS = 'text-[0.8125rem]';

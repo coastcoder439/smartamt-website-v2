@@ -5,7 +5,10 @@ import { Accessibility, ArrowRightLeft, Cookie, Link2, Palette, Users, X, type L
 import { Label } from '@/components/ui/Label';
 import { RevealHeading, RevealText } from '@/components/ui/Reveal';
 import { useIsoLayoutEffect } from '@/hooks/useIsoLayoutEffect';
-import { gsap, registerGsap } from '@/lib/gsap';
+import { gsap, registerGsap, ScrollTrigger } from '@/lib/gsap';
+import Link from 'next/link';
+import { EINZELNES } from '@/lib/abschnitte';
+import { SCHRITTE } from './Ablauf';
 import WebsiteKnopf from './b2/WebsiteKnopf';
 import { Staffel } from './b3/Staffel';
 import { ABSCHNITT_WEISS, LABEL_GROSS } from './c2/abschnitt';
@@ -100,6 +103,7 @@ export default function Angebot() {
 
         const mm = gsap.matchMedia();
         mm.add('(prefers-reduced-motion: no-preference)', () => {
+            const aufraeumen: (() => void)[] = [];
             // 1. Die vier Punkte: Karten schweben gestaffelt herein, Kreise und Haken zeichnen sich
             if (punkteListe) {
                 const karten = gsap.utils.toArray<HTMLElement>(punkteListe.querySelectorAll('[data-punkt]'));
@@ -115,6 +119,48 @@ export default function Angebot() {
             }
 
             // 2. Vergleich: links rückt das übliche Projekt gedämpft herein, rechts setzen sich die Zeilen von SmartAmt
+            // v3: Schritte im Angebot: die Linie zeichnet sich mit dem Scroll, die Nummern füllen sich nacheinander orange.
+            const schritteListe = el.querySelector<HTMLElement>('[data-schritte]');
+            if (schritteListe) {
+                const linieSchritte = schritteListe.querySelector<HTMLElement>('[data-schritte-linie]');
+                const nummern = gsap.utils.toArray<HTMLElement>(schritteListe.querySelectorAll('[data-schritt-nr]'));
+                const eintraege = gsap.utils.toArray<HTMLElement>(schritteListe.querySelectorAll('[data-schritt]'));
+                gsap.from(eintraege, {
+                    y: 24,
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: 'power3.out',
+                    stagger: 0.12,
+                    clearProps: 'transform,opacity',
+                    scrollTrigger: { trigger: schritteListe, start: 'top 82%', once: true },
+                });
+                if (linieSchritte) {
+                    gsap.fromTo(
+                        linieSchritte,
+                        { scaleX: 0 },
+                        { scaleX: 1, ease: 'none', scrollTrigger: { trigger: schritteListe, start: 'top 75%', end: 'bottom 55%', scrub: 0.4 } },
+                    );
+                }
+                // Nummern: Endzustand im Server-HTML ist „an“ (orange); der Effekt schaltet sie aus und mit dem Scroll wieder an.
+                nummern.forEach((nr, i) => {
+                    nr.dataset.an = 'false';
+                    ScrollTrigger.create({
+                        trigger: schritteListe,
+                        start: () => `top+=${(i / Math.max(1, nummern.length - 1)) * 0.5 * schritteListe.offsetHeight} 68%`,
+                        onLeaveBack: () => {
+                            nr.dataset.an = 'false';
+                        },
+                        onEnter: () => {
+                            nr.dataset.an = 'true';
+                        },
+                        end: 'max',
+                    });
+                });
+                aufraeumen.push(() => {
+                    for (const nr of nummern) nr.dataset.an = 'true';
+                });
+            }
+
             if (vergleich) {
                 const links = gsap.utils.toArray<HTMLElement>(vergleich.querySelectorAll('[data-ueblich]'));
                 const rechts = gsap.utils.toArray<HTMLElement>(vergleich.querySelectorAll('[data-smartamt]'));
@@ -151,13 +197,17 @@ export default function Angebot() {
                     },
                 );
             }
+
+            return () => {
+                for (const f of aufraeumen) f();
+            };
         });
 
         return () => mm.revert();
     }, []);
 
     return (
-        <section ref={wurzel} id="angebot" aria-labelledby="angebot-titel" className={ABSCHNITT_WEISS}>
+        <section ref={wurzel} id="angebot" aria-labelledby="angebot-titel" className={`${ABSCHNITT_WEISS} lg:!pb-16`}>
             <Licht seite="links" />
             <div className="wrap">
                 <Label className={LABEL_GROSS}>Das Angebot</Label>
@@ -178,7 +228,7 @@ export default function Angebot() {
                 <ul
                     data-punkte
                     role="list"
-                    className="mt-12 grid gap-4 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4 lg:gap-5"
+                    className="mt-10 grid gap-4 sm:grid-cols-2 lg:mt-12 lg:grid-cols-4 lg:gap-5"
                 >
                     {PUNKTE.map((p) => (
                         <li
@@ -192,11 +242,11 @@ export default function Angebot() {
                                     {p.nr}
                                 </span>
                             </div>
-                            <h3 className="mt-7 text-[clamp(1.375rem,1.15rem+0.8vw,1.75rem)] font-bold leading-[1.12] tracking-[-0.03em]">
+                            <h3 className="mt-6 text-[clamp(1.25rem,1.1rem+0.6vw,1.5rem)] font-bold leading-[1.15] tracking-[-0.03em]">
                                 {p.titel}
                             </h3>
                             {p.marke ? (
-                                <p className="mt-auto pt-6">
+                                <p className="pt-4">
                                     <span className="chip chip-ok">{p.marke}</span>
                                 </p>
                             ) : null}
@@ -204,129 +254,205 @@ export default function Angebot() {
                     ))}
                 </ul>
 
-                {/* 2. Vergleich: Übliches Projekt gegen SmartAmt. Am Desktop teilen sich beide Karten fünf Zeilen (Subgrid). */}
-                <div
-                    data-vergleich
-                    className="mt-16 grid gap-5 md:mt-20 md:grid-cols-2 md:grid-rows-[auto_repeat(4,auto)] md:gap-x-6 md:gap-y-0"
-                >
-                    <section
-                        aria-labelledby="angebot-ueblich"
-                        className="rounded-[1.25rem] border border-line bg-bg-2 p-6 sm:p-8 md:row-span-5 md:grid md:grid-rows-subgrid"
-                    >
-                        <h3
-                            id="angebot-ueblich"
-                            className="font-mono text-[0.8125rem] font-medium uppercase tracking-[0.14em] text-ink-3"
-                        >
-                            Übliches Projekt
-                        </h3>
-                        <dl className="contents">
-                            {VERGLEICH.map((z) => (
-                                <div
-                                    key={z.kopf}
-                                    data-ueblich
-                                    className="mt-5 border-t border-line-2 pt-5 first:mt-6 md:mt-0 md:flex md:flex-col md:justify-center md:py-5"
-                                >
-                                    <dt className="font-mono text-[0.75rem] uppercase tracking-[0.12em] text-ink-3">{z.kopf}</dt>
-                                    <dd className="mt-2 flex items-start gap-3 text-[1.0625rem] leading-snug text-ink-2">
-                                        <X aria-hidden="true" size={18} strokeWidth={2} className="mt-[3px] flex-none text-ink-3" />
-                                        <span>{z.ueblich}</span>
-                                    </dd>
-                                </div>
-                            ))}
-                        </dl>
-                    </section>
-
-                    <section
-                        aria-labelledby="angebot-smartamt"
-                        className="relative overflow-hidden rounded-[1.25rem] border border-line-2 bg-bg p-6 shadow-md sm:p-8 md:row-span-5 md:grid md:grid-rows-subgrid"
-                    >
-                        <span
-                            aria-hidden="true"
-                            data-oben-linie
-                            className="pointer-events-none absolute inset-x-0 top-0 h-[3px] origin-left bg-brand"
-                        />
-                        <h3
-                            id="angebot-smartamt"
-                            className="font-mono text-[0.8125rem] font-medium uppercase tracking-[0.14em] text-brand-ink"
-                        >
-                            SmartAmt
-                        </h3>
-                        <dl className="contents">
-                            {VERGLEICH.map((z) => (
-                                <div
-                                    key={z.kopf}
-                                    data-smartamt
-                                    className="mt-5 border-t border-line pt-5 first:mt-6 md:mt-0 md:flex md:flex-col md:justify-center md:py-5"
-                                >
-                                    <dt className="font-mono text-[0.75rem] uppercase tracking-[0.12em] text-ink-3">{z.kopf}</dt>
-                                    <dd className="mt-2 flex items-start gap-3 text-[1.0625rem] font-semibold leading-snug text-ink">
-                                        <Haken klasse="mt-[1px] size-[1.375rem] flex-none" />
-                                        <span>{z.smartamt}</span>
-                                    </dd>
-                                </div>
-                            ))}
-                        </dl>
-                    </section>
-                </div>
-
-                {/* 3. Kleine Merkmale (höchstens sechs) */}
-                <Staffel
-                    as="ul"
-                    role="list"
-                    kinder=":scope > li"
-                    className="mt-10 grid gap-3 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3"
-                >
-                    {MERKMALE.map(({ text, Icon }) => (
-                        <li key={text} className="flex items-center gap-3 rounded-2xl border border-line bg-bg px-4 py-3.5 shadow-sm">
-                            <span
-                                aria-hidden="true"
-                                className="grid size-10 flex-none place-items-center rounded-xl bg-bg-2 text-ink"
-                            >
-                                <Icon size={20} strokeWidth={1.75} />
-                            </span>
-                            <span className="text-[0.9375rem] font-semibold leading-snug text-ink">{text}</span>
-                        </li>
-                    ))}
-                </Staffel>
-
-                {/* Leitlinie: führt zur Schlusskarte und dockt mit dem Punkt an ihrer Oberkante an */}
-                <div
-                    aria-hidden="true"
-                    data-verbinder
-                    className="relative z-10 mx-auto -mb-px mt-9 h-14 w-[2px] md:mt-12 md:h-20"
-                >
-                    <span className="absolute inset-0 rounded-full bg-line-2" />
-                    <span data-verbinder-fuell className="absolute inset-0 origin-top rounded-full bg-brand" />
-                    <span
-                        data-verbinder-punkt
-                        className="absolute left-1/2 top-full -ml-[0.25rem] -mt-[0.25rem] h-[0.5rem] w-[0.5rem] rounded-full bg-brand"
-                        style={{ boxShadow: '0 0 0 4px var(--brand-100)' }}
-                    />
-                </div>
-
-                {/* 4. Schlusskarte: Preis auf Anfrage, Hauptknopf */}
-                <div className="karte relative isolate overflow-hidden rounded-[1.5rem] border-line-2 px-5 py-10 sm:px-10 md:px-14 md:py-14">
-                    <div
-                        aria-hidden="true"
-                        className="dot-grid pointer-events-none absolute inset-y-0 right-0 -z-10 hidden w-1/2 opacity-70 [mask-image:radial-gradient(75%_95%_at_100%_0%,black,transparent)] sm:block"
-                    />
-                    <span
-                        aria-hidden="true"
-                        className="pointer-events-none absolute left-6 top-0 h-[2px] w-16 rounded-full bg-brand sm:left-10 md:left-14"
-                    />
-                    <div className="grid-12 items-center gap-y-8">
-                        <div className="col-span-12 lg:col-span-7">
-                            <p className="text-[clamp(2.25rem,1.3rem+3.6vw,4.25rem)] font-bold leading-[1.02] tracking-[-0.045em] text-ink">
-                                Preis auf Anfrage.
+                {/* v3: Ablauf im Angebot (Plan 03-website-v3, Punkt 1d): vier Schritte in einer Reihe auf einer Linie, die sich
+                    beim Scrollen zeichnet; darunter Preiszeile und der eine Knopf. Der eigene Abschnitt Ablauf.tsx ist ausgeblendet
+                    (EINZELNES.ablaufEigenerAbschnitt). Schritte und Texte kommen aus Ablauf.tsx (SCHRITTE). */}
+                {!EINZELNES.ablaufEigenerAbschnitt ? (
+                    <div id="ablauf" aria-labelledby="ablauf-titel" className="mt-12 scroll-mt-[calc(var(--header-h)+40px)] lg:mt-12" role="group">
+                        <div className="flex items-baseline justify-between gap-6 border-t border-line pt-6">
+                            <h3 id="ablauf-titel" className="text-[clamp(1.375rem,1.15rem+0.8vw,1.75rem)] font-bold tracking-[-0.03em]">
+                                Vom Brief zur neuen Website.
+                            </h3>
+                            <p className="hidden font-mono text-[0.8125rem] tracking-[0.12em] text-ink-3 sm:block">
+                                Prüfung und Vorschau sind kostenlos.
                             </p>
-                            <p className="mt-3 max-w-[30ch] text-lead text-ink-2">Ihr Angebot kommt mit der Vorschau.</p>
                         </div>
-                        <div className="col-span-12 lg:col-span-5 lg:border-l lg:border-line-2 lg:pl-12">
-                            <WebsiteKnopf />
-                            <p className="mt-4 text-klein text-ink-3">Kostenlos und unverbindlich. Antwort in 24 Stunden.</p>
+                        <ol data-schritte className="relative mt-8 grid gap-8 md:grid-cols-2 lg:mt-10 lg:grid-cols-4 lg:gap-6">
+                            {/* Linie hinter den Nummern (ab 1024 px): feine Spur, darüber die orange Füllung */}
+                            <span aria-hidden="true" className="absolute left-0 right-0 top-5 hidden h-px bg-line lg:block">
+                                <span data-schritte-linie className="absolute inset-0 origin-left bg-brand" />
+                            </span>
+                            {SCHRITTE.map((schritt, i) => (
+                                <li key={schritt.titel} data-schritt className="relative">
+                                    <div className="flex items-center gap-3">
+                                        <span
+                                            aria-hidden="true"
+                                            data-schritt-nr
+                                            data-an="true"
+                                            className="relative grid size-10 place-items-center rounded-full border border-line-2 bg-bg font-mono text-[0.8125rem] font-semibold text-ink transition-colors duration-300 data-[an=true]:border-brand data-[an=true]:bg-brand data-[an=true]:text-[var(--on-brand)]"
+                                        >
+                                            {String(i + 1).padStart(2, '0')}
+                                        </span>
+                                        {schritt.kostenlos ? <span className="chip chip-ok relative">Kostenlos</span> : null}
+                                    </div>
+                                    <h4 className="mt-5 text-[1.25rem] font-bold leading-snug tracking-[-0.02em] text-ink">
+                                        <span className="sr-only">Schritt {i + 1}: </span>
+                                        {schritt.titel}
+                                    </h4>
+                                    <p className="mt-2 max-w-[30ch] text-[1rem] leading-[1.5] text-ink-2">{schritt.text}</p>
+                                </li>
+                            ))}
+                        </ol>
+                        {/* Preisband, dunkel (Fläche --night): der zweite Wechsel im Takt der Seite. „Fester Jahresbetrag“ statt
+                            „Preis auf Anfrage“ (Prüfer Runde 1: „Preis auf Anfrage“ widersprach dem Vorteil „Fester Jahresbetrag, vorher
+                            bekannt“); beide Wendungen stehen so schon im Angebot. Dazu der Weg zu den Fragen (Kosten, Ausschreibung). */}
+                        <div className="surface-night relative isolate mt-12 flex flex-col items-start gap-6 overflow-hidden rounded-[1.5rem] px-6 py-8 sm:px-10 md:flex-row md:items-center md:justify-between lg:mt-10 lg:px-12 lg:py-8">
+                            <span aria-hidden="true" className="pointer-events-none absolute left-6 top-0 h-[2px] w-16 rounded-full bg-brand sm:left-10 lg:left-12" />
+                            <div>
+                                <p className="text-[clamp(1.5rem,1.15rem+1.2vw,2.25rem)] font-bold leading-[1.1] tracking-[-0.035em] text-[#fafafa]">
+                                    Fester Jahresbetrag.{' '}
+                                    <span className="text-brand-hell md:block">Ihr Angebot kommt mit der Vorschau.</span>
+                                </p>
+                                <p className="mt-3 text-[1rem]">
+                                    Kosten, Ausschreibung, Laufzeit:{' '}
+                                    <Link href="/fragen/#faq" className="link font-semibold text-[#fafafa]">
+                                        Antworten unter Fragen
+                                    </Link>
+                                </p>
+                            </div>
+                            <div className="flex-none [&_.btn]:whitespace-nowrap">
+                                <WebsiteKnopf />
+                            </div>
                         </div>
                     </div>
-                </div>
+                ) : null}
+
+                {/* 2. Vergleich: Übliches Projekt gegen SmartAmt. Am Desktop teilen sich beide Karten fünf Zeilen (Subgrid). */}
+                {EINZELNES.angebotVergleich ? (
+                    <>
+                    <div
+                        data-vergleich
+                        className="mt-16 grid gap-5 md:mt-20 md:grid-cols-2 md:grid-rows-[auto_repeat(4,auto)] md:gap-x-6 md:gap-y-0"
+                    >
+                        <section
+                            aria-labelledby="angebot-ueblich"
+                            className="rounded-[1.25rem] border border-line bg-bg-2 p-6 sm:p-8 md:row-span-5 md:grid md:grid-rows-subgrid"
+                        >
+                            <h3
+                                id="angebot-ueblich"
+                                className="font-mono text-[0.8125rem] font-medium uppercase tracking-[0.14em] text-ink-3"
+                            >
+                                Übliches Projekt
+                            </h3>
+                            <dl className="contents">
+                                {VERGLEICH.map((z) => (
+                                    <div
+                                        key={z.kopf}
+                                        data-ueblich
+                                        className="mt-5 border-t border-line-2 pt-5 first:mt-6 md:mt-0 md:flex md:flex-col md:justify-center md:py-5"
+                                    >
+                                        <dt className="font-mono text-[0.75rem] uppercase tracking-[0.12em] text-ink-3">{z.kopf}</dt>
+                                        <dd className="mt-2 flex items-start gap-3 text-[1.0625rem] leading-snug text-ink-2">
+                                            <X aria-hidden="true" size={18} strokeWidth={2} className="mt-[3px] flex-none text-ink-3" />
+                                            <span>{z.ueblich}</span>
+                                        </dd>
+                                    </div>
+                                ))}
+                            </dl>
+                        </section>
+
+                        <section
+                            aria-labelledby="angebot-smartamt"
+                            className="relative overflow-hidden rounded-[1.25rem] border border-line-2 bg-bg p-6 shadow-md sm:p-8 md:row-span-5 md:grid md:grid-rows-subgrid"
+                        >
+                            <span
+                                aria-hidden="true"
+                                data-oben-linie
+                                className="pointer-events-none absolute inset-x-0 top-0 h-[3px] origin-left bg-brand"
+                            />
+                            <h3
+                                id="angebot-smartamt"
+                                className="font-mono text-[0.8125rem] font-medium uppercase tracking-[0.14em] text-brand-ink"
+                            >
+                                SmartAmt
+                            </h3>
+                            <dl className="contents">
+                                {VERGLEICH.map((z) => (
+                                    <div
+                                        key={z.kopf}
+                                        data-smartamt
+                                        className="mt-5 border-t border-line pt-5 first:mt-6 md:mt-0 md:flex md:flex-col md:justify-center md:py-5"
+                                    >
+                                        <dt className="font-mono text-[0.75rem] uppercase tracking-[0.12em] text-ink-3">{z.kopf}</dt>
+                                        <dd className="mt-2 flex items-start gap-3 text-[1.0625rem] font-semibold leading-snug text-ink">
+                                            <Haken klasse="mt-[1px] size-[1.375rem] flex-none" />
+                                            <span>{z.smartamt}</span>
+                                        </dd>
+                                    </div>
+                                ))}
+                            </dl>
+                        </section>
+                    </div>
+                    </>
+                ) : null}
+
+                {/* 3. Kleine Merkmale (höchstens sechs) */}
+                {EINZELNES.angebotMerkmale ? (
+                    <>
+                    <Staffel
+                        as="ul"
+                        role="list"
+                        kinder=":scope > li"
+                        className="mt-10 grid gap-3 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3"
+                    >
+                        {MERKMALE.map(({ text, Icon }) => (
+                            <li key={text} className="flex items-center gap-3 rounded-2xl border border-line bg-bg px-4 py-3.5 shadow-sm">
+                                <span
+                                    aria-hidden="true"
+                                    className="grid size-10 flex-none place-items-center rounded-xl bg-bg-2 text-ink"
+                                >
+                                    <Icon size={20} strokeWidth={1.75} />
+                                </span>
+                                <span className="text-[0.9375rem] font-semibold leading-snug text-ink">{text}</span>
+                            </li>
+                        ))}
+                    </Staffel>
+                    </>
+                ) : null}
+
+                {/* Leitlinie: führt zur Schlusskarte und dockt mit dem Punkt an ihrer Oberkante an */}
+                {EINZELNES.angebotSchlusskarte ? (
+                    <>
+                    <div
+                        aria-hidden="true"
+                        data-verbinder
+                        className="relative z-10 mx-auto -mb-px mt-9 h-14 w-[2px] md:mt-12 md:h-20"
+                    >
+                        <span className="absolute inset-0 rounded-full bg-line-2" />
+                        <span data-verbinder-fuell className="absolute inset-0 origin-top rounded-full bg-brand" />
+                        <span
+                            data-verbinder-punkt
+                            className="absolute left-1/2 top-full -ml-[0.25rem] -mt-[0.25rem] h-[0.5rem] w-[0.5rem] rounded-full bg-brand"
+                            style={{ boxShadow: '0 0 0 4px var(--brand-100)' }}
+                        />
+                    </div>
+
+                    {/* 4. Schlusskarte: Preis auf Anfrage, Hauptknopf */}
+                    <div className="karte relative isolate overflow-hidden rounded-[1.5rem] border-line-2 px-5 py-10 sm:px-10 md:px-14 md:py-14">
+                        <div
+                            aria-hidden="true"
+                            className="dot-grid pointer-events-none absolute inset-y-0 right-0 -z-10 hidden w-1/2 opacity-70 [mask-image:radial-gradient(75%_95%_at_100%_0%,black,transparent)] sm:block"
+                        />
+                        <span
+                            aria-hidden="true"
+                            className="pointer-events-none absolute left-6 top-0 h-[2px] w-16 rounded-full bg-brand sm:left-10 md:left-14"
+                        />
+                        <div className="grid-12 items-center gap-y-8">
+                            <div className="col-span-12 lg:col-span-7">
+                                <p className="text-[clamp(2.25rem,1.3rem+3.6vw,4.25rem)] font-bold leading-[1.02] tracking-[-0.045em] text-ink">
+                                    Preis auf Anfrage.
+                                </p>
+                                <p className="mt-3 max-w-[30ch] text-lead text-ink-2">Ihr Angebot kommt mit der Vorschau.</p>
+                            </div>
+                            <div className="col-span-12 lg:col-span-5 lg:border-l lg:border-line-2 lg:pl-12">
+                                <WebsiteKnopf />
+                                <p className="mt-4 text-klein text-ink-3">Kostenlos und unverbindlich. Antwort in 24 Stunden.</p>
+                            </div>
+                        </div>
+                    </div>
+                    </>
+                ) : null}
+
             </div>
         </section>
     );

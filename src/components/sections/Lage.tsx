@@ -1,4 +1,5 @@
 import { Label } from '@/components/ui/Label';
+import { EINZELNES } from '@/lib/abschnitte';
 import { RevealText } from '@/components/ui/Reveal';
 import Rangliste from './b2/Rangliste';
 import { ABSCHNITT_WEISS, LABEL_GROSS } from './c2/abschnitt';
@@ -46,7 +47,8 @@ export default function Lage() {
                     <RevealText className="mt-6 max-w-[34em]">
                         Deutschland hat aufgeholt, von Platz 22 im Jahr 2022 auf Platz 12 im Jahr 2024. Entschieden wird
                         der Rest vor Ort: in 10.753 Gemeinden, die oft mit wenig Personal viel leisten. Genau dort
-                        setzen wir an, mit Technik, die einfach funktioniert, und mit Schulungen, die entlasten.
+                        setzen wir an, mit Technik, die einfach funktioniert
+                        {EINZELNES.lageSchulungen ? ', und mit Schulungen, die entlasten' : ''}.
                     </RevealText>
                 </div>
 

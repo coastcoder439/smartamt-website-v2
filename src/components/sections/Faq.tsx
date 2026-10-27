@@ -2,7 +2,8 @@ import { Phone } from 'lucide-react';
 import { Label } from '@/components/ui/Label';
 import { RevealHeading, RevealText } from '@/components/ui/Reveal';
 import { EINZELNES } from '@/lib/abschnitte';
-import { LEON } from '@/lib/site';
+// v3: Die Nummer in der Seitenleiste ist das Festnetz (KONTAKT); Leons Handynummer steht nur beim Ansprechpartner im Kontakt.
+import { KONTAKT } from '@/lib/site';
 import WebsiteKnopf from './b2/WebsiteKnopf';
 import { Staffel } from './b3/Staffel';
 import { AkkordeonKarte } from './c3/Akkordeon';
@@ -115,7 +116,7 @@ export default function Faq() {
                             <RevealText as="div" className="mt-8 flex flex-col items-start gap-3">
                                 <WebsiteKnopf label="Vorschau anfragen" />
                                 <a
-                                    href={LEON.telefonHref}
+                                    href={KONTAKT.telefonHref}
                                     className="group/tel inline-flex min-h-[2.75rem] items-center gap-3 font-medium text-ink"
                                 >
                                     <span
@@ -126,7 +127,7 @@ export default function Faq() {
                                     </span>
                                     <span>
                                         <span className="block font-mono text-label uppercase text-ink-3">Telefon</span>
-                                        <span className="link">{LEON.telefon}</span>
+                                        <span className="link">{KONTAKT.telefon}</span>
                                     </span>
                                 </a>
                             </RevealText>

@@ -10,7 +10,7 @@ import { Magnet } from '@/components/ui/Magnet';
 import { ScrollTrigger, registerGsap } from '@/lib/gsap';
 import { waehleAnliegen } from '@/lib/kontakt';
 import { getLenis, handleAnchorClick } from '@/lib/scroll';
-import { KONTAKT, MENUE } from '@/lib/site';
+import { KONTAKT, MENUE, type MenuePunkt } from '@/lib/site';
 
 /**
  * Kopfzeile (CI v3): Logo links, Navigation in der Mitte, Hauptknopf „Vorschau anfragen“ rechts (Website v2).
@@ -215,6 +215,18 @@ export default function Header() {
 
     const beiLogo = (e: React.MouseEvent<HTMLAnchorElement>) => beiAnker(e, '');
 
+    // Menüpunkt auf eine eigene Seite (v3: Über uns, Fragen): normal navigieren, nur das Handy-Menü schließen.
+    const beiSeite = () => {
+        if (offen) sperreScroll(false);
+        setOffen(false);
+    };
+
+    // aria-current: „page“ für die geöffnete Unterseite, „location“ für den Abschnitt, der auf der Startseite im Bild ist.
+    const aktuellerPunkt = (m: MenuePunkt): 'page' | 'location' | undefined => {
+        if (m.href) return pfad === m.href || `${pfad}/` === m.href ? 'page' : undefined;
+        return aktuell === m.id ? 'location' : undefined;
+    };
+
     // Hauptknopf: springt zum Kontakt und wählt dort das Anliegen „Vorschau anfragen“ (wie die Knöpfe im Hero und im Angebot).
     const zumKontakt = (e: React.MouseEvent<HTMLAnchorElement>) => {
         waehleAnliegen('website');
@@ -252,9 +264,9 @@ export default function Header() {
                             {MENUE.map((m) => (
                                 <li key={m.id}>
                                     <Link
-                                        href={`/#${m.id}`}
-                                        onClick={(e) => beiAnker(e, m.id)}
-                                        aria-current={aktuell === m.id ? 'location' : undefined}
+                                        href={m.href ?? `/#${m.id}`}
+                                        onClick={(e) => (m.href ? beiSeite() : beiAnker(e, m.id))}
+                                        aria-current={aktuellerPunkt(m)}
                                         className="nav-link"
                                     >
                                         {m.label}
@@ -307,10 +319,10 @@ export default function Header() {
                                     style={{ animationDelay: `${60 + i * 55}ms` }}
                                 >
                                     <Link
-                                        href={`/#${m.id}`}
-                                        onClick={(e) => beiAnker(e, m.id)}
-                                        aria-current={aktuell === m.id ? 'location' : undefined}
-                                        className="group/punkt flex items-center justify-between border-b border-line py-[18px] text-[1.75rem] font-semibold leading-tight tracking-[-0.03em] text-ink aria-[current=location]:text-brand-ink"
+                                        href={m.href ?? `/#${m.id}`}
+                                        onClick={(e) => (m.href ? beiSeite() : beiAnker(e, m.id))}
+                                        aria-current={aktuellerPunkt(m)}
+                                        className="group/punkt flex items-center justify-between border-b border-line py-[18px] text-[1.75rem] font-semibold leading-tight tracking-[-0.03em] text-ink aria-[current=location]:text-brand-ink aria-[current=page]:text-brand-ink"
                                     >
                                         {m.label}
                                         <ArrowRight

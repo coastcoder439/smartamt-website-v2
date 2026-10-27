@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import Image from 'next/image';
 import { Label } from '@/components/ui/Label';
+import { EINZELNES } from '@/lib/abschnitte';
 import { KUNDEN_LOGOS, KUNDEN_LOGOS_SPUR_2, type KundenLogo } from '@/components/sections/c1/kunden-logos';
 import styles from '@/components/sections/c1/Kunden.module.css';
 import { useIsoLayoutEffect } from '@/hooks/useIsoLayoutEffect';
@@ -117,7 +118,7 @@ export default function Kunden() {
             ref={wurzel}
             id="kunden"
             aria-labelledby="kunden-satz"
-            className="relative scroll-mt-[calc(var(--header-h)+56px)] pb-10 pt-16 md:pb-10 md:pt-20"
+            className="relative scroll-mt-[calc(var(--header-h)+56px)] pb-8 pt-12 md:pb-8 md:pt-14"
         >
             <div className="wrap">
                 <div data-kunden-kopf className="flex items-center gap-4 md:gap-6">
@@ -152,13 +153,16 @@ export default function Kunden() {
                         </div>
                     </div>
 
-                    {/* Zweite, gegenläufige Spur: gleiche Logos in anderer Reihenfolge, reine Dekoration */}
-                    <div data-kunden-band aria-hidden="true" className={`${styles.band} ${styles.rueckwaerts} ${styles.zweite}`}>
-                        <div data-kunden-spur className={styles.spur}>
-                            <Gruppe logos={KUNDEN_LOGOS_SPUR_2} beschriftet={false} />
-                            <Gruppe logos={KUNDEN_LOGOS_SPUR_2} beschriftet={false} />
+                    {/* Zweite, gegenläufige Spur: gleiche Logos in anderer Reihenfolge, reine Dekoration. v3: ausgeblendet
+                        (EINZELNES.kundenZweiteSpur), ein Logo-Band genügt (Plan 03-website-v3, Punkt 1e). */}
+                    {EINZELNES.kundenZweiteSpur ? (
+                        <div data-kunden-band aria-hidden="true" className={`${styles.band} ${styles.rueckwaerts} ${styles.zweite}`}>
+                            <div data-kunden-spur className={styles.spur}>
+                                <Gruppe logos={KUNDEN_LOGOS_SPUR_2} beschriftet={false} />
+                                <Gruppe logos={KUNDEN_LOGOS_SPUR_2} beschriftet={false} />
+                            </div>
                         </div>
-                    </div>
+                    ) : null}
                 </div>
             </div>
         </section>

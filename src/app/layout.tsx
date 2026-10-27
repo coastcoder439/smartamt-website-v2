@@ -129,7 +129,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html
             lang="de"
-            className={`${sans.variable} ${mono.variable}`}
+            className={`${sans.variable} ${mono.variable}${EINZELNES.punktraster ? '' : ' punkte-aus'}`}
             suppressHydrationWarning
         >
             <head>

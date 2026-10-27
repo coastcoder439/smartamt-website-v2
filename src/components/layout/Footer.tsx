@@ -10,7 +10,7 @@ import { Logo } from '@/components/ui/Logo';
 import { useIsoLayoutEffect } from '@/hooks/useIsoLayoutEffect';
 import { EINZELNES } from '@/lib/abschnitte';
 import { bewegungReduziert, gsap, registerGsap } from '@/lib/gsap';
-import { ABSENDER, KONTAKT, LEON, RECHTSSEITEN, TOBIAS } from '@/lib/site';
+import { ABSENDER, KONTAKT, LEON, RECHTSSEITEN, TOBIAS, UNTERSEITEN } from '@/lib/site';
 
 /**
  * Fuß (CI v3): weißer Grund mit feiner Oberlinie (hebt sich vom grauen Kontaktabschnitt darüber ab).
@@ -136,6 +136,14 @@ export default function Footer() {
                                     <AnkerLink id={l.id} className="fuss-link">
                                         {l.label}
                                     </AnkerLink>
+                                </li>
+                            ))}
+                            {/* v3: die Unterseiten (Plan 03-website-v3, Punkt 2 und 3) */}
+                            {UNTERSEITEN.map((seite) => (
+                                <li key={seite.href}>
+                                    <Link href={seite.href} className="fuss-link">
+                                        {seite.label}
+                                    </Link>
                                 </li>
                             ))}
                         </ul>

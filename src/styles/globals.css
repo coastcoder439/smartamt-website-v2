@@ -290,8 +290,10 @@
         column-gap: var(--gutter);
     }
 
+    /* v3: kleinere Abschnittsabstände (v2: clamp(5rem, 10vw, 9rem)). Owner 27.10.2026: „Da sind noch so viele leere Flächen“;
+       gemessen bei 1440 px: bis 263 px leer zwischen zwei Abschnitten, jetzt rund 140 px. */
     .section {
-        padding-block: clamp(5rem, 10vw, 9rem);
+        padding-block: clamp(3rem, 5vw, 4.5rem);
     }
 
     /* ---- Flächen --------------------------------------------------------- */
@@ -670,12 +672,14 @@
     }
 
     .nav-link:hover,
-    .nav-link[aria-current='location'] {
+    .nav-link[aria-current='location'],
+    .nav-link[aria-current='page'] {
         color: var(--ink);
     }
 
     .nav-link:hover::after,
-    .nav-link[aria-current='location']::after {
+    .nav-link[aria-current='location']::after,
+    .nav-link[aria-current='page']::after {
         transform: scaleX(1);
     }
 
@@ -905,6 +909,16 @@ html.js .anruf-knopf:not([data-sichtbar='true']) {
     /* Der Unterrand blendet aus: kein harter Absatz zum nächsten Abschnitt, auch wenn die Lichter nach oben driften */
     -webkit-mask-image: linear-gradient(to bottom, black calc(100% - clamp(7.5rem, 22vh, 13.75rem)), transparent);
     mask-image: linear-gradient(to bottom, black calc(100% - clamp(7.5rem, 22vh, 13.75rem)), transparent);
+}
+
+/* v3 (EINZELNES.punktraster = false, Klasse am <html>): alle Punktraster aus, nur das im Hero der Startseite bleibt, gedämpft.
+   Owner 27.10.2026: „aber nicht überall diese gepunkteten Hintergründe. Das gefällt mir nicht. Das sieht sehr nach KI aus.“ */
+.punkte-aus .dot-grid {
+    background-image: none !important;
+}
+
+.punkte-aus .hero-dots {
+    opacity: 0.45;
 }
 
 /* Punktraster: deutlicher als .dot-grid, mittig stark, zu den Rändern ausblendend */
